@@ -123,6 +123,14 @@ namespace PhoenixaStudio
 					}
 					break;
 
+				case Task.CollectSpeedBoostPowerUp:
+					if (!GlobalValue.isStartCollectSpeedBoostPowerUp)
+					{
+						GlobalValue.CollectSpeedBoostPowerUp = 0;
+						GlobalValue.isStartCollectSpeedBoostPowerUp = true;
+					}
+					break;
+
 				case Task.PlayGame:
 
 					break;
@@ -248,6 +256,20 @@ namespace PhoenixaStudio
 								MissionComplete(mission.MissionID);
 								mission.RewardButton.SetActive(true);
 								GlobalValue.isStartCollectBulletPowerUp = false;
+							}
+						}
+						break;
+
+					case Task.CollectSpeedBoostPowerUp:
+						if (mission.RewardButton.transform.parent.gameObject.activeSelf)
+						{
+							left = Mathf.Clamp(Missions[mission.MissionID].targetAmount - GlobalValue.CollectSpeedBoostPowerUp, 0, int.MaxValue);
+							mission.missionTargetTxt.text = left > 0 ? "Remain: " + left : "Mission Complete";
+							if (left == 0)
+							{
+								MissionComplete(mission.MissionID);
+								mission.RewardButton.SetActive(true);
+								GlobalValue.isStartCollectSpeedBoostPowerUp = false;
 							}
 						}
 						break;

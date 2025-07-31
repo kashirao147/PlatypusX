@@ -167,6 +167,19 @@ namespace PhoenixaStudio
 			set { PlayerPrefs.SetInt("isStartCollectBulletPowerUp", value ? 1 : 0); }
 		}
 
+		public static int CollectSpeedBoostPowerUp
+		{
+			get { return PlayerPrefs.GetInt("CollectSpeedBoostPowerUp", 0); }
+			set { PlayerPrefs.SetInt("CollectSpeedBoostPowerUp", value); }
+		}
+
+		public static bool isStartCollectSpeedBoostPowerUp
+		{
+			get { return PlayerPrefs.GetInt("isStartCollectSpeedBoostPowerUp", 0) == 1; }
+			set { PlayerPrefs.SetInt("isStartCollectSpeedBoostPowerUp", value ? 1 : 0); }
+			
+		}
+
 		public static int PlayGame
 		{
 			get { return PlayerPrefs.GetInt("PlayGame", 0); }

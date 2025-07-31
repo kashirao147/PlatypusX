@@ -22,6 +22,7 @@ public class HandControlSwitcher : MonoBehaviour
         }
         else
         {
+            
             EnableRightHandControls();
         }
 

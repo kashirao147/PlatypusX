@@ -12,6 +12,7 @@ namespace PhoenixaStudio
 		CollectShieldPowerUp,
 		CollectMagnetPowerUp,
 		CollectBulletPowerUp,
+		CollectSpeedBoostPowerUp,
 		PlayGame
 	}
 

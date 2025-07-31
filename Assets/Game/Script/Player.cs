@@ -37,6 +37,15 @@ namespace PhoenixaStudio
 		public Magnet Magnet;
 		public float timeMagnet = 7;
 
+		[Header("Speed Boost")]
+		public float speedBoostMultiplier = 2f;
+		public float speedBoostRampUpTime = 1f;    // Time to reach double speed
+		public float speedBoostDuration = 10f;      // Duration at double speed
+		public float speedBoostRampDownTime = 1f;   // Time to return to normal
+		private bool isSpeedBoosted = false;
+		private float originalSpeed = 0f;
+		private float speedBoostTarget = 0f;
+
 		[Header("Rocket")]
 		public float fireRate = 0.35f;
 		float timeToFire = 0;
@@ -305,6 +314,66 @@ namespace PhoenixaStudio
 			//init the magnet
 			Magnet.init(timeMagnet);
 			Magnet.gameObject.SetActive(true);
+		}
+
+		public void UseSpeedBoost()
+		{
+			if (!isSpeedBoosted)
+			{
+				// Store original speed and calculate target
+				originalSpeed = GameManager.Instance.Speed;
+				speedBoostTarget = originalSpeed * speedBoostMultiplier;
+				isSpeedBoosted = true;
+				
+				// Play sound effect
+				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
+				
+				// Start the speed boost coroutine
+				StartCoroutine(SpeedBoostCoroutine());
+			}
+		}
+
+		private IEnumerator SpeedBoostCoroutine()
+		{
+			// Phase 1: Gradually increase speed to double over 1 second
+			float elapsedTime = 0f;
+			
+			while (elapsedTime < speedBoostRampUpTime)
+			{
+				elapsedTime += Time.deltaTime;
+				float t = elapsedTime / speedBoostRampUpTime;
+				GameManager.Instance.Speed = Mathf.Lerp(originalSpeed, speedBoostTarget, t);
+				yield return null;
+			}
+			
+			// Ensure we're exactly at target speed
+			GameManager.Instance.Speed = speedBoostTarget;
+			
+			// Phase 2: Stay at double speed for 10 seconds
+			// During this time, we need to maintain the boosted speed
+			float boostStartTime = Time.time;
+			while (Time.time - boostStartTime < speedBoostDuration)
+			{
+				// Keep the speed at the boosted level
+				GameManager.Instance.Speed = speedBoostTarget;
+				yield return null;
+			}
+			
+			// Phase 3: Gradually reduce speed back to original over 1 second
+			elapsedTime = 0f;
+			float currentSpeed = GameManager.Instance.Speed;
+			
+			while (elapsedTime < speedBoostRampDownTime)
+			{
+				elapsedTime += Time.deltaTime;
+				float t = elapsedTime / speedBoostRampDownTime;
+				GameManager.Instance.Speed = Mathf.Lerp(currentSpeed, originalSpeed, t);
+				yield return null;
+			}
+			
+			// Ensure we're back to original speed
+			GameManager.Instance.Speed = originalSpeed;
+			isSpeedBoosted = false;
 		}
 
 		IEnumerator DoBlinks(float time, float seconds)
