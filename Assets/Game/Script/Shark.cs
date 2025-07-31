@@ -75,6 +75,17 @@ namespace PhoenixaStudio
 			{
                 if (anim != null)
                     anim.SetTrigger("Attack");
+                
+                // Check if player is invincible during speed boost
+                if (Player.isSpeedBoostInvincible)
+                {
+                    // Just trigger camera shake without damaging the player
+                    var SharkCamera = FindObjectOfType<ShakeCamera>();
+                    if (SharkCamera != null)
+                        SharkCamera.DoShake();
+                    return;
+                }
+                
 				Player.Damage(damage);
 			}
 		}

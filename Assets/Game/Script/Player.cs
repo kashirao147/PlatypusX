@@ -76,7 +76,7 @@ namespace PhoenixaStudio
 
 		//the player can be kill by anything, use this when player hit somthing and it's blinking
 		bool godMode = false;
-		private bool isSpeedBoostInvincible = false;
+		public bool isSpeedBoostInvincible = false;
 
 		Rigidbody2D rig;
 		ShakeCamera SharkCamera;

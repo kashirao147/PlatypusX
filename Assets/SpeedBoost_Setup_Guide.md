@@ -121,7 +121,8 @@ speedBoostMission.rewardCoin = 50;
 9. Verify player control is disabled during speed boost
 10. Verify player stays at the same Y position during speed boost
 11. Test camera shake by colliding with enemies/obstacles during speed boost
-12. Check that the collection is tracked in GlobalValue
+12. Test shark collision during speed boost (should trigger camera shake, not game over)
+13. Check that the collection is tracked in GlobalValue
 
 ### Debug Information:
 - The speed boost uses the shield powerup sound effect
@@ -140,6 +141,7 @@ speedBoostMission.rewardCoin = 50;
 7. **Particles not showing**: Check speedBoostParticle GameObject assignment in Player.cs
 8. **Player control not disabled**: Check isSpeedBoosted flag in HandleInput() method
 9. **Camera shake not working**: Check SharkCamera.DoShake() call in OnTriggerStay2D method
+10. **Shark collision causing game over**: Check Shark.cs OnTriggerEnter2D method for speed boost invincibility check
 
 ### Debug Tips:
 - Add Debug.Log statements in PowerUpSpeedBoost.OnTriggerEnter2D
