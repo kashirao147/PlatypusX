@@ -42,10 +42,12 @@ namespace PhoenixaStudio
 		public float speedBoostRampUpTime = 1f;    // Time to reach double speed
 		public float speedBoostDuration = 10f;      // Duration at double speed
 		public float speedBoostRampDownTime = 1f;   // Time to return to normal
+		public GameObject speedBoostParticle;       // Particle effect for speed boost
 		private bool isSpeedBoosted = false;
 		private float originalSpeed = 0f;
 		private float speedBoostTarget = 0f;
 		private Coroutine currentSpeedBoostCoroutine = null;
+		private float speedBoostYPosition = 0f;     // Store Y position when speed boost starts
 
 		[Header("Rocket")]
 		public float fireRate = 0.35f;
@@ -149,6 +151,10 @@ namespace PhoenixaStudio
 		//Check keyboard input
 		private void HandleInput()
 		{
+			// Disable all input during speed boost
+			if (isSpeedBoosted)
+				return;
+
 			if (Input.GetKey(KeyCode.F))
 				Fire();
 
@@ -193,7 +199,14 @@ namespace PhoenixaStudio
 
 			//if the player is blinking or speed boost invincible, don't hit any obstacles
 			if (godMode || isSpeedBoostInvincible)
+			{
+				// Add small camera shake when colliding with obstacles during speed boost
+				if (isSpeedBoostInvincible && (other.GetComponent<Enemy>() != null || other.CompareTag("Bomb")))
+				{
+					SharkCamera.DoShake();
+				}
 				return;
+			}
 
 			var Enemy = other.GetComponent<Enemy>();
 			if (Enemy)
@@ -344,6 +357,15 @@ namespace PhoenixaStudio
 				isSpeedBoosted = true;
 				isSpeedBoostInvincible = true; // Enable invincibility
 				
+				// Store current Y position
+				speedBoostYPosition = transform.position.y;
+				
+				// Activate particle effect
+				if (speedBoostParticle != null)
+				{
+					speedBoostParticle.SetActive(true);
+				}
+				
 				// Play sound effect
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
 				
@@ -362,6 +384,12 @@ namespace PhoenixaStudio
 				elapsedTime += Time.deltaTime;
 				float t = elapsedTime / speedBoostRampUpTime;
 				GameManager.Instance.Speed = Mathf.Lerp(originalSpeed, speedBoostTarget, t);
+				
+				// Keep player at the same Y position and disable control
+				Vector3 currentPos = transform.position;
+				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
+				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				
 				yield return null;
 			}
 			
@@ -375,6 +403,12 @@ namespace PhoenixaStudio
 			{
 				// Keep the speed at the boosted level
 				GameManager.Instance.Speed = speedBoostTarget;
+				
+				// Keep player at the same Y position and disable control
+				Vector3 currentPos = transform.position;
+				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
+				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				
 				yield return null;
 			}
 			
@@ -387,6 +421,12 @@ namespace PhoenixaStudio
 				elapsedTime += Time.deltaTime;
 				float t = elapsedTime / speedBoostRampDownTime;
 				GameManager.Instance.Speed = Mathf.Lerp(currentSpeed, originalSpeed, t);
+				
+				// Keep player at the same Y position and disable control
+				Vector3 currentPos = transform.position;
+				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
+				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				
 				yield return null;
 			}
 			
@@ -395,6 +435,12 @@ namespace PhoenixaStudio
 			isSpeedBoosted = false;
 			isSpeedBoostInvincible = false; // Disable invincibility
 			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
+			
+			// Deactivate particle effect
+			if (speedBoostParticle != null)
+			{
+				speedBoostParticle.SetActive(false);
+			}
 		}
 
 		private IEnumerator SpeedBoostTimerResetCoroutine()
@@ -406,6 +452,12 @@ namespace PhoenixaStudio
 			{
 				// Keep the speed at the boosted level
 				GameManager.Instance.Speed = speedBoostTarget;
+				
+				// Keep player at the same Y position and disable control
+				Vector3 currentPos = transform.position;
+				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
+				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				
 				yield return null;
 			}
 			
@@ -418,6 +470,12 @@ namespace PhoenixaStudio
 				elapsedTime += Time.deltaTime;
 				float t = elapsedTime / speedBoostRampDownTime;
 				GameManager.Instance.Speed = Mathf.Lerp(currentSpeed, originalSpeed, t);
+				
+				// Keep player at the same Y position and disable control
+				Vector3 currentPos = transform.position;
+				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
+				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				
 				yield return null;
 			}
 			
@@ -426,6 +484,12 @@ namespace PhoenixaStudio
 			isSpeedBoosted = false;
 			isSpeedBoostInvincible = false; // Disable invincibility
 			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
+			
+			// Deactivate particle effect
+			if (speedBoostParticle != null)
+			{
+				speedBoostParticle.SetActive(false);
+			}
 		}
 
 		IEnumerator DoBlinks(float time, float seconds)
