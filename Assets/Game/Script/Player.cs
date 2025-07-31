@@ -45,6 +45,7 @@ namespace PhoenixaStudio
 		private bool isSpeedBoosted = false;
 		private float originalSpeed = 0f;
 		private float speedBoostTarget = 0f;
+		private Coroutine currentSpeedBoostCoroutine = null;
 
 		[Header("Rocket")]
 		public float fireRate = 0.35f;
@@ -73,6 +74,7 @@ namespace PhoenixaStudio
 
 		//the player can be kill by anything, use this when player hit somthing and it's blinking
 		bool godMode = false;
+		private bool isSpeedBoostInvincible = false;
 
 		Rigidbody2D rig;
 		ShakeCamera SharkCamera;
@@ -189,8 +191,8 @@ namespace PhoenixaStudio
 				GlobalValue.Coin++;
 			}
 
-			//if the player is blinking, don't hit any obstacles
-			if (godMode)
+			//if the player is blinking or speed boost invincible, don't hit any obstacles
+			if (godMode || isSpeedBoostInvincible)
 				return;
 
 			var Enemy = other.GetComponent<Enemy>();
@@ -318,18 +320,35 @@ namespace PhoenixaStudio
 
 		public void UseSpeedBoost()
 		{
-			if (!isSpeedBoosted)
+			// If speed boost is already active, just reset the 10-second timer
+			if (isSpeedBoosted)
 			{
+				// Stop the current coroutine
+				if (currentSpeedBoostCoroutine != null)
+				{
+					StopCoroutine(currentSpeedBoostCoroutine);
+				}
+				
+				// Restart the speed boost coroutine (this will reset only the 10-second timer)
+				currentSpeedBoostCoroutine = StartCoroutine(SpeedBoostTimerResetCoroutine());
+				
+				// Play sound effect for the refresh
+				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
+			}
+			else
+			{
+				// First time collecting speed boost
 				// Store original speed and calculate target
 				originalSpeed = GameManager.Instance.Speed;
 				speedBoostTarget = originalSpeed * speedBoostMultiplier;
 				isSpeedBoosted = true;
+				isSpeedBoostInvincible = true; // Enable invincibility
 				
 				// Play sound effect
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
 				
 				// Start the speed boost coroutine
-				StartCoroutine(SpeedBoostCoroutine());
+				currentSpeedBoostCoroutine = StartCoroutine(SpeedBoostCoroutine());
 			}
 		}
 
@@ -374,6 +393,39 @@ namespace PhoenixaStudio
 			// Ensure we're back to original speed
 			GameManager.Instance.Speed = originalSpeed;
 			isSpeedBoosted = false;
+			isSpeedBoostInvincible = false; // Disable invincibility
+			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
+		}
+
+		private IEnumerator SpeedBoostTimerResetCoroutine()
+		{
+			// Since speed is already at double, just reset the 10-second timer
+			// Phase 1: Stay at double speed for 10 seconds
+			float boostStartTime = Time.time;
+			while (Time.time - boostStartTime < speedBoostDuration)
+			{
+				// Keep the speed at the boosted level
+				GameManager.Instance.Speed = speedBoostTarget;
+				yield return null;
+			}
+			
+			// Phase 2: Gradually reduce speed back to original over 1 second
+			float elapsedTime = 0f;
+			float currentSpeed = GameManager.Instance.Speed;
+			
+			while (elapsedTime < speedBoostRampDownTime)
+			{
+				elapsedTime += Time.deltaTime;
+				float t = elapsedTime / speedBoostRampDownTime;
+				GameManager.Instance.Speed = Mathf.Lerp(currentSpeed, originalSpeed, t);
+				yield return null;
+			}
+			
+			// Ensure we're back to original speed
+			GameManager.Instance.Speed = originalSpeed;
+			isSpeedBoosted = false;
+			isSpeedBoostInvincible = false; // Disable invincibility
+			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
 		}
 
 		IEnumerator DoBlinks(float time, float seconds)

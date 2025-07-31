@@ -55,8 +55,8 @@ namespace PhoenixaStudio
 			GameManager.Instance.ShowFloatingText(score + "", transform.position, Color.yellow);
 
 			GlobalValue.SharkKilled++;
-
-			GetComponent<BoxCollider2D>().enabled = false;
+			if(GetComponent<BoxCollider>()!=null)
+				GetComponent<BoxCollider2D>().enabled = false;
 		}
 
 		//call by animation event Die

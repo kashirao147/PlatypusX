@@ -17,6 +17,8 @@ The speed boost powerup has been successfully added to the PlatypusX game. This 
 - **Duration**: 10 seconds at double speed
 - **Ramp Down Time**: 1 second to gradually return to normal speed
 - **Multiplier**: 2x speed boost (configurable)
+- **Invincibility**: Player is invincible during the entire speed boost effect
+- **Timer Reset**: Collecting another speed boost resets only the 10-second timer (speed stays at double)
 - **Sound**: Uses shield powerup sound effect
 - **Mission Integration**: Tracks collection for missions
 
@@ -108,7 +110,9 @@ speedBoostMission.rewardCoin = 50;
 3. Verify the speed gradually increases to double over 1 second
 4. Verify the speed stays at double for 10 seconds
 5. Verify the speed gradually returns to normal over 1 second
-6. Check that the collection is tracked in GlobalValue
+6. Test invincibility by colliding with enemies/obstacles during speed boost
+7. Test timer reset by collecting another speed boost during active effect (speed stays at double, only timer resets)
+8. Check that the collection is tracked in GlobalValue
 
 ### Debug Information:
 - The speed boost uses the shield powerup sound effect
@@ -122,6 +126,8 @@ speedBoostMission.rewardCoin = 50;
 2. **No speed boost effect**: Verify Player.UseSpeedBoost() is called
 3. **Sound not playing**: Check SoundManager.soundPowerUpShield is assigned
 4. **Mission not tracking**: Verify GlobalValue variables are properly set
+5. **Invincibility not working**: Check isSpeedBoostInvincible flag in Player.cs
+6. **Timer reset not working**: Check currentSpeedBoostCoroutine reference in Player.cs
 
 ### Debug Tips:
 - Add Debug.Log statements in PowerUpSpeedBoost.OnTriggerEnter2D
