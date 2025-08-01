@@ -37,7 +37,17 @@ namespace PhoenixaStudio
 
 		public void MoveUp()
 		{
-			isMoveUp = true;
+			if (!GameManager.Instance.Player.isSnowLevel)
+				isMoveUp = true;
+			else
+			{
+				GameManager.Instance.Player.JumpSnowLevel();
+			}
+		}
+		public void Jump()
+		{
+			//GameManager.Instance.Player.JumpSnowLevel();
+			//isMoveUp = true;
 		}
 
 		public void MoveUpOff()

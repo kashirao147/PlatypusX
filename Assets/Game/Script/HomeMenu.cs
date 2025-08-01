@@ -22,7 +22,7 @@ namespace PhoenixaStudio
 
 		public void GotoPlay()
 		{
-			SceneManager.LoadSceneAsync("Play");
+			SceneManager.LoadSceneAsync("Snow Level");
 		}
 	}
 }

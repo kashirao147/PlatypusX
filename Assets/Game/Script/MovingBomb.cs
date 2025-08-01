@@ -6,7 +6,7 @@ namespace PhoenixaStudio
         //set the moving speed
         public float speed = 2;
         //set the moving direction
-        public enum MoveDirection { Up, Down }
+        public enum MoveDirection { Up, Down, left, right }
         public MoveDirection moveDirection;
         //only move of the distace to the player lower than this value
         public float activeDistanceToPlayer = 5;
@@ -25,7 +25,22 @@ namespace PhoenixaStudio
             }
             else
             {
-                transform.Translate(new Vector3(0, speed * Time.deltaTime * (moveDirection == MoveDirection.Up ? 1 : -1), 0));
+                switch (moveDirection)
+                {
+                    case MoveDirection.Up:
+                        transform.Translate(new Vector3(0, speed * Time.deltaTime * 1), 0);
+                        break;
+                    case MoveDirection.Down:
+                        transform.Translate(new Vector3(0, speed * Time.deltaTime * -1), 0);
+                        break;
+                    case MoveDirection.left:
+                        transform.Translate(new Vector3(speed * Time.deltaTime *  -1 , 0), 0);
+                        transform.Rotate(0f, 0f, speed*2 * Time.deltaTime);
+                        break;
+
+
+                }
+                //transform.Translate(new Vector3(0, speed * Time.deltaTime * (moveDirection == MoveDirection.Up ? 1 : -1), 0));
             }
         }
     }

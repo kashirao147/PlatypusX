@@ -4,6 +4,15 @@ namespace PhoenixaStudio
 {
 	public class Player : MonoBehaviour
 	{
+		[Header("Snow Level Settings")]
+		public bool isSnowLevel = false;    // Enable snow movement mode
+		public float jumpForce = 10f;       // Jump impulse
+		private int jumpCount = 0;          // Track jumps
+		private bool isGrounded = false;    // Check if grounded
+		public Animator playerAnimator;     // Animator for walking/jumping animations
+		private float fixedX;
+		public float Gravity=1.5f;            // Store X position so player never moves on X
+
 		[Header("Setup Submarine")]
 		[Range(0, 100)]
 		public int health = 100;
@@ -84,6 +93,7 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
+
 			//find the ShakeCamera object
 			SharkCamera = FindObjectOfType<ShakeCamera>();
 			//init the rigidbody
@@ -108,11 +118,24 @@ namespace PhoenixaStudio
 			soundEngineFX.loop = true;
 			soundEngineFX.volume = volumeOff;
 			soundEngineFX.Play();
+			fixedX = transform.position.x; // Save starting X position
 		}
+
+
+
 
 		// Update is called once per frame
 		void Update()
 		{
+
+			if (GameManager.Instance.State != GameManager.GameState.Playing)
+        	return;
+
+			if (isSnowLevel)
+			{
+				HandleSnowLevelMovement();
+				//return; // Skip submarine controls
+			}
 			if (GameManager.Instance.State != GameManager.GameState.Playing)
 				return;
 
@@ -179,7 +202,7 @@ namespace PhoenixaStudio
 		{
 			//init the time and gravity
 			timeBegin = Time.time;
-			rig.gravityScale = 1.5f;
+			rig.gravityScale =Gravity;
 			rig.velocity = Vector2.zero;
 
 			GlobalValue.PlayGame++;
@@ -212,7 +235,7 @@ namespace PhoenixaStudio
 			if (Enemy)
 			{
 				//Take damage
-				Damage(Enemy.damage);      
+				Damage(Enemy.damage);
 				Enemy.Hit(0);
 			}
 		}
@@ -341,10 +364,10 @@ namespace PhoenixaStudio
 				{
 					StopCoroutine(currentSpeedBoostCoroutine);
 				}
-				
+
 				// Restart the speed boost coroutine (this will reset only the 10-second timer)
 				currentSpeedBoostCoroutine = StartCoroutine(SpeedBoostTimerResetCoroutine());
-				
+
 				// Play sound effect for the refresh
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
 			}
@@ -356,19 +379,19 @@ namespace PhoenixaStudio
 				speedBoostTarget = originalSpeed * speedBoostMultiplier;
 				isSpeedBoosted = true;
 				isSpeedBoostInvincible = true; // Enable invincibility
-				
+
 				// Store current Y position
 				speedBoostYPosition = transform.position.y;
-				
+
 				// Activate particle effect
 				if (speedBoostParticle != null)
 				{
 					speedBoostParticle.SetActive(true);
 				}
-				
+
 				// Play sound effect
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
-				
+
 				// Start the speed boost coroutine
 				currentSpeedBoostCoroutine = StartCoroutine(SpeedBoostCoroutine());
 			}
@@ -378,24 +401,24 @@ namespace PhoenixaStudio
 		{
 			// Phase 1: Gradually increase speed to double over 1 second
 			float elapsedTime = 0f;
-			
+
 			while (elapsedTime < speedBoostRampUpTime)
 			{
 				elapsedTime += Time.deltaTime;
 				float t = elapsedTime / speedBoostRampUpTime;
 				GameManager.Instance.Speed = Mathf.Lerp(originalSpeed, speedBoostTarget, t);
-				
+
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
 				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
-				
+
 				yield return null;
 			}
-			
+
 			// Ensure we're exactly at target speed
 			GameManager.Instance.Speed = speedBoostTarget;
-			
+
 			// Phase 2: Stay at double speed for 10 seconds
 			// During this time, we need to maintain the boosted speed
 			float boostStartTime = Time.time;
@@ -403,39 +426,39 @@ namespace PhoenixaStudio
 			{
 				// Keep the speed at the boosted level
 				GameManager.Instance.Speed = speedBoostTarget;
-				
+
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
 				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
-				
+
 				yield return null;
 			}
-			
+
 			// Phase 3: Gradually reduce speed back to original over 1 second
 			elapsedTime = 0f;
 			float currentSpeed = GameManager.Instance.Speed;
-			
+
 			while (elapsedTime < speedBoostRampDownTime)
 			{
 				elapsedTime += Time.deltaTime;
 				float t = elapsedTime / speedBoostRampDownTime;
 				GameManager.Instance.Speed = Mathf.Lerp(currentSpeed, originalSpeed, t);
-				
+
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
 				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
-				
+
 				yield return null;
 			}
-			
+
 			// Ensure we're back to original speed
 			GameManager.Instance.Speed = originalSpeed;
 			isSpeedBoosted = false;
 			isSpeedBoostInvincible = false; // Disable invincibility
 			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
-			
+
 			// Deactivate particle effect
 			if (speedBoostParticle != null)
 			{
@@ -452,39 +475,39 @@ namespace PhoenixaStudio
 			{
 				// Keep the speed at the boosted level
 				GameManager.Instance.Speed = speedBoostTarget;
-				
+
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
 				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
-				
+
 				yield return null;
 			}
-			
+
 			// Phase 2: Gradually reduce speed back to original over 1 second
 			float elapsedTime = 0f;
 			float currentSpeed = GameManager.Instance.Speed;
-			
+
 			while (elapsedTime < speedBoostRampDownTime)
 			{
 				elapsedTime += Time.deltaTime;
 				float t = elapsedTime / speedBoostRampDownTime;
 				GameManager.Instance.Speed = Mathf.Lerp(currentSpeed, originalSpeed, t);
-				
+
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
 				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
-				
+
 				yield return null;
 			}
-			
+
 			// Ensure we're back to original speed
 			GameManager.Instance.Speed = originalSpeed;
 			isSpeedBoosted = false;
 			isSpeedBoostInvincible = false; // Disable invincibility
 			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
-			
+
 			// Deactivate particle effect
 			if (speedBoostParticle != null)
 			{
@@ -511,5 +534,67 @@ namespace PhoenixaStudio
 			submarineSprite.color = Color.white;
 			godMode = false;
 		}
+
+
+		#region snow level
+
+		public void HandleSnowLevelMovement()
+		{
+			// Lock player X position so it never changes
+			transform.position = new Vector3(fixedX, transform.position.y, transform.position.z);
+
+			// Detect walk animation trigger
+			if (isGrounded)
+			{
+				playerAnimator.SetBool("isWalking", true); // Play walk animation
+			}
+			else
+			{
+				playerAnimator.SetBool("isWalking", false); // Idle
+			}
+ 
+			// Jumping
+			
+		}
+
+		public void JumpSnowLevel()
+		{
+			if (jumpCount < 2)
+			{
+				rig.velocity = new Vector2(0, 0); // Reset vertical velocity
+				rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+				jumpCount++;
+
+				playerAnimator.SetTrigger("Jump");
+			}
+		}
+	
+	private void OnCollisionEnter2D(Collision2D collision)
+		{
+			if (isSnowLevel && collision.gameObject.CompareTag("Ground"))
+			{
+				isGrounded = true;
+				jumpCount = 0;
+			}
+		}
+
+private void OnCollisionExit2D(Collision2D collision)
+{
+    if (isSnowLevel && collision.gameObject.CompareTag("Ground"))
+    {
+        isGrounded = false;
+    }
+}
+
+
+			
+	#endregion
+
+
+
+
+
 	}
+
+
 }
