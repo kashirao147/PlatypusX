@@ -8,6 +8,7 @@ The speed boost powerup has been successfully added to the PlatypusX game. This 
 ### 1. Scripts Created/Modified:
 - **PowerUpSpeedBoost.cs** - New powerup script (created)
 - **Player.cs** - Added speed boost functionality (modified)
+- **BackGroundController.cs** - Enhanced background speed during speed boost (modified)
 - **GlobalValue.cs** - Added speed boost tracking variables (modified)
 - **Mission.cs** - Added CollectSpeedBoostPowerUp task type (modified)
 - **MissionManager.cs** - Added speed boost mission handling (modified)
@@ -23,6 +24,7 @@ The speed boost powerup has been successfully added to the PlatypusX game. This 
 - **Player Control**: Player control is disabled during speed boost
 - **Y Position Lock**: Player stays at the same Y position where speed boost was collected
 - **Camera Shake**: Small camera shake when colliding with obstacles during speed boost
+- **Background Speed**: Background parallax speed is doubled during speed boost for enhanced visual effect
 - **Sound**: Uses shield powerup sound effect
 - **Mission Integration**: Tracks collection for missions
 
@@ -122,7 +124,8 @@ speedBoostMission.rewardCoin = 50;
 10. Verify player stays at the same Y position during speed boost
 11. Test camera shake by colliding with enemies/obstacles during speed boost
 12. Test shark collision during speed boost (should trigger camera shake, not game over)
-13. Check that the collection is tracked in GlobalValue
+13. Verify background parallax moves faster during speed boost
+14. Check that the collection is tracked in GlobalValue
 
 ### Debug Information:
 - The speed boost uses the shield powerup sound effect
@@ -142,6 +145,8 @@ speedBoostMission.rewardCoin = 50;
 8. **Player control not disabled**: Check isSpeedBoosted flag in HandleInput() method
 9. **Camera shake not working**: Check SharkCamera.DoShake() call in OnTriggerStay2D method
 10. **Shark collision causing game over**: Check Shark.cs OnTriggerEnter2D method for speed boost invincibility check
+11. **Destroy effects not showing**: Check destroyFX assignment and soundDestroy in Player.cs
+12. **Background not moving faster**: Check BackGroundController.cs speedMultiplier logic
 
 ### Debug Tips:
 - Add Debug.Log statements in PowerUpSpeedBoost.OnTriggerEnter2D

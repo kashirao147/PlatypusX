@@ -1,55 +1,133 @@
 ﻿using UnityEngine;
-using System.Collections;
+using DG.Tweening;
+using DG.Tweening.Core; // Needed for DOGetter and DOSetter
+
 namespace PhoenixaStudio
 {
-	public class BackGroundController : MonoBehaviour
-	{
-		//set the speed for background. midground. forceground
-		public Renderer Background;
-		//Set moving speed for the background
-		public float speedBG = 0.01f;
-		public Renderer Midground;
-		//Set moving speed for the Midground
-		public float speedMG = 0.02f;
-		public Renderer Forceground;
-		//Set moving speed for the Forceground
-		public float speedFG = 0.03f;
-		public Renderer Fish;
-		public float speedFish = 0.015f;
-		float x;
+    public class BackGroundController : MonoBehaviour
+    {
+        [Header("Material Scroll (Smooth)")]
+        public Renderer Background;
+        public float speedBG = 0.01f;
+        public Renderer Midground;
+        public float speedMG = 0.02f;
+        public Renderer Forceground;
+        public float speedFG = 0.03f;
+        public Renderer Fish;
+        public float speedFish = 0.015f;
 
-		void Update()
+        // Internal offset tracking
+        private float offsetBG, offsetMG, offsetFG, offsetFish;
+
+        // Tween references
+        private Tween tweenBG, tweenMG, tweenFG, tweenFish;
+
+        private void Start()
+        {
+            // Start looping tweens
+            tweenBG = CreateScrollTween(Background, () => offsetBG, v => offsetBG = v, speedBG);
+            tweenMG = CreateScrollTween(Midground, () => offsetMG, v => offsetMG = v, speedMG);
+            tweenFG = CreateScrollTween(Forceground, () => offsetFG, v => offsetFG = v, speedFG);
+            tweenFish = CreateScrollTween(Fish, () => offsetFish, v => offsetFish = v, speedFish);
+        }
+		
+		private void SetTweenSpeed(Tween tween, float speed, float baseSpeed)
 		{
-			if (GameManager.Instance.State == GameManager.GameState.Playing || GameManager.Instance.State == GameManager.GameState.Menu)
+			if (tween != null && speed > 0f && baseSpeed > 0f)
 			{
-				//caculating the x value of the target and the original position
-				x += GameManager.Instance.Speed * Time.deltaTime;
 
-				if (Background != null)
+				float multiplier = 1f; //GameManager.Instance.playerTemp.speedBoostMultiplier; // e.g., 2x if speed boost doubles speed
+				if (GameManager.Instance.playerTemp.isSpeedBoosted)
 				{
-					//caculating the offset value then set to the texture offset value
-					var offset = (x * speedBG) % 1;
-					Background.material.mainTextureOffset = new Vector2(offset, Background.material.mainTextureOffset.y);
+					 multiplier = GameManager.Instance.playerTemp.speedBoostMultiplier;
 				}
-				if (Midground != null)
-				{
-					//caculating the offset value then set to the texture offset value
-					var offset = (x * speedMG) % 1;
-					Midground.material.mainTextureOffset = new Vector2(offset, Midground.material.mainTextureOffset.y);
-				}
-				if (Forceground != null)
-				{
-					//caculating the offset value then set to the texture offset value
-					var offset = (x * speedFG) % 1;
-					Forceground.material.mainTextureOffset = new Vector2(offset, Forceground.material.mainTextureOffset.y);
-				}
-				if (Fish != null)
-				{
-					//caculating the offset value then set to the texture offset value
-					var offset = (x * speedFish) % 1;
-					Fish.material.mainTextureOffset = new Vector2(offset, Fish.material.mainTextureOffset.y);
-				}
+				tween.timeScale = multiplier;
 			}
 		}
+
+
+        private void Update()
+		{
+			// Pause/resume scrolling based on game state
+			bool isScrolling = GameManager.Instance.State == GameManager.GameState.Playing ||
+							   GameManager.Instance.State == GameManager.GameState.Menu;
+
+			if (isScrolling)
+			{
+				ResumeTweens();
+				UpdateTweenSpeeds();
+			}
+			else
+			{
+				PauseTweens();
+			}
+		}
+
+      private Tween CreateScrollTween(Renderer renderer, System.Func<float> getter, System.Action<float> setter, float speed)
+	{
+		if (renderer == null) return null;
+
+		return DOTween.To(
+			new DOGetter<float>(() => getter()),
+			new DOSetter<float>((float val) =>
+			{
+				setter(val);
+
+				// Avoid Unity property setter confusion
+				Vector2 texOffset = renderer.material.mainTextureOffset;
+				texOffset.x = val;
+				renderer.material.mainTextureOffset = texOffset;
+			}),
+			1f, 1f / speed)
+		.SetEase(Ease.Linear)
+		.SetLoops(-1, LoopType.Restart);
 	}
+
+
+        private void UpdateTweenSpeeds()
+        {
+            float speedMultiplier = 1f;
+
+            if (GameManager.Instance.Player != null && GameManager.Instance.Player.isSpeedBoosted)
+                speedMultiplier = GameManager.Instance.Player.speedBoostMultiplier;
+
+            // Smoothly update speed without snapping
+            SetTweenSpeed(tweenBG, speedBG * speedMultiplier, speedBG);
+			SetTweenSpeed(tweenMG, speedMG * speedMultiplier, speedMG);
+			SetTweenSpeed(tweenFG, speedFG * speedMultiplier, speedFG);
+			SetTweenSpeed(tweenFish, speedFish * speedMultiplier, speedFish);
+
+        }
+
+        private void SetTweenSpeed(Tween tween, float speed)
+        {
+            if (tween != null && speed > 0f)
+            {
+                // Convert target speed to time scale
+                float newDuration = 1f / speed;
+                float newTimeScale = tween.Duration(false) / newDuration;
+
+                // Smooth speed change
+                DOTween.To(() => tween.timeScale, ts => tween.timeScale = ts, newTimeScale, 0.25f)
+                       .SetEase(Ease.Linear)
+                       .SetUpdate(true);
+            }
+        }
+
+        private void PauseTweens()
+        {
+            tweenBG?.Pause();
+            tweenMG?.Pause();
+            tweenFG?.Pause();
+            tweenFish?.Pause();
+        }
+
+        private void ResumeTweens()
+        {
+            tweenBG?.Play();
+            tweenMG?.Play();
+            tweenFG?.Play();
+            tweenFish?.Play();
+        }
+    }
 }

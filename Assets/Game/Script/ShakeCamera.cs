@@ -1,56 +1,44 @@
-﻿using UnityEngine; 
-using System.Collections;
+﻿using UnityEngine;
+using DG.Tweening;
+
 namespace PhoenixaStudio
 {
-	public class ShakeCamera : MonoBehaviour
-	{
-		//setup the size of shaking
-		public bool shakePosition;
-		public bool shakeRotation;
-		//set the intensity for the shaking
-		public float shakeIntensity = 0.5f;
-		public float shakeDecay = 0.02f;
+    public class ShakeCamera : MonoBehaviour
+    {
+        [Header("Shake Settings")]
+        public float shakeDuration = 0.5f;   // How long the shake lasts
+        public float shakeStrength = 0.5f;   // How far it moves left/right
+        public int vibrato = 10;              // Number of shakes
+        public float randomness = 0f;         // Keep 0 for perfect left/right
 
-		private Vector3 OriginalPos;
-		private Quaternion OriginalRot;
-		private bool isShakeRunning = false;
+        private Vector3 originalPos;
+        private Tweener shakeTween;
 
-		public void DoShake()
-		{
-			//init the original position and rotation
-			OriginalPos = transform.position;
-			OriginalRot = transform.rotation;
+        private void Awake()
+        {
+            originalPos = transform.localPosition; // Store starting point
+        }
 
-			StartCoroutine("ProcessShake");
-		}
+        public void DoShake()
+        {
+            // Stop any previous shake
+            if (shakeTween != null && shakeTween.IsActive())
+                shakeTween.Kill();
 
-		IEnumerator ProcessShake()
-		{
-			//check and make the shaking
-			if (!isShakeRunning)
-			{
-				isShakeRunning = true;
-				float currentShakeIntensity = shakeIntensity;
-				//check the remain time
-				while (currentShakeIntensity > 0)
-				{
-					if (shakePosition)
-					{
-						transform.position = OriginalPos + Random.insideUnitSphere * currentShakeIntensity;
-					}
-					if (shakeRotation)
-					{
-						transform.rotation = new Quaternion(OriginalRot.x + Random.Range(-currentShakeIntensity, currentShakeIntensity) * .2f,
-							OriginalRot.y + Random.Range(-currentShakeIntensity, currentShakeIntensity) * .2f,
-							OriginalRot.z + Random.Range(-currentShakeIntensity, currentShakeIntensity) * .2f,
-							OriginalRot.w + Random.Range(-currentShakeIntensity, currentShakeIntensity) * .2f);
-					}
-					currentShakeIntensity -= shakeDecay;
-					yield return null;
-				}
-
-				isShakeRunning = false;
-			}
-		}
-	}
+            // Shake only horizontally
+            shakeTween = transform
+                .DOShakePosition(
+                    shakeDuration,
+                    new Vector3(shakeStrength, 0, 0), // X only
+                    vibrato,
+                    randomness,
+                    false, // Snapping
+                    false  // FadeOut
+                )
+                .OnComplete(() =>
+                {
+                    transform.localPosition = originalPos; // Reset position
+                });
+        }
+    }
 }

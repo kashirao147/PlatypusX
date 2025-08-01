@@ -21,6 +21,7 @@ namespace PhoenixaStudio
 		public GameObject FloatingText;
 		private MainMenu menuManager;
 		//the speed of the submarine
+		
 		public float Speed { get; set; }
 		public int Score { get; set; }
 		[HideInInspector]
@@ -160,11 +161,13 @@ namespace PhoenixaStudio
 					{
 						Debug.Log("===> Only spawn the test level prefab");
 						Instantiate(testLevelItem);
+						if(!playerTemp.isSpeedBoosted)
 						Speed = testSpeed;
 					}
 					else
 					{
 						Instantiate(LevelBlock[i].Levels[Random.Range(0, LevelBlock[i].Levels.Length)]);
+						if(!playerTemp.isSpeedBoosted)
 						Speed = LevelBlock[i].levelSpeed;
 					}
 

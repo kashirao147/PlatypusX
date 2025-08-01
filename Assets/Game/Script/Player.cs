@@ -43,8 +43,8 @@ namespace PhoenixaStudio
 		public float speedBoostDuration = 10f;      // Duration at double speed
 		public float speedBoostRampDownTime = 1f;   // Time to return to normal
 		public GameObject speedBoostParticle;       // Particle effect for speed boost
-		private bool isSpeedBoosted = false;
-		private float originalSpeed = 0f;
+		public bool isSpeedBoosted = false;
+		public float originalSpeed = 0f;
 		private float speedBoostTarget = 0f;
 		private Coroutine currentSpeedBoostCoroutine = null;
 		private float speedBoostYPosition = 0f;     // Store Y position when speed boost starts
