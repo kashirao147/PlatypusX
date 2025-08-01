@@ -13,9 +13,17 @@ namespace PhoenixaStudio
 		public GameObject destroyFX;
 		public AudioClip soundDestroy;
 
+		[Header("Enmey reference")]
+		public bool isHumanEnemy;
+		[SerializeField] Animator animator;
+
 		//called by Player
 		public virtual void Hit(int takedamage, bool forceDestroy = false)
 		{
+			if (isHumanEnemy)
+			{
+				animator.Play("Attacking");
+			}
 			//check if this object is the bomb
 			if (gameObject.CompareTag("Bomb"))
 			{
