@@ -48,6 +48,7 @@ namespace PhoenixaStudio
 
         private void Update()
 		{
+			
 			// Pause/resume scrolling based on game state
 			bool isScrolling = GameManager.Instance.State == GameManager.GameState.Playing ||
 							   GameManager.Instance.State == GameManager.GameState.Menu;
