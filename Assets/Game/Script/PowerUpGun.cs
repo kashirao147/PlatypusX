@@ -8,6 +8,7 @@ namespace PhoenixaStudio
 		public int bulletAdded = 5;
 		//rocket add
 		public int rocketAdded = 1;
+		public GameObject CollectingEffect;
 
 		void Update()
 		{
@@ -21,6 +22,8 @@ namespace PhoenixaStudio
 			//Only contact to the player
 			if (other.GetComponent<Player>())
 			{
+				if (CollectingEffect != null)
+					Instantiate(CollectingEffect, transform.position, Quaternion.identity);
 				//Add bullet
 				GlobalValue.Bullet += bulletAdded;
 				GlobalValue.Rocket += rocketAdded;
