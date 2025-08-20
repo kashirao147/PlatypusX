@@ -6,12 +6,15 @@ namespace PhoenixaStudio
 	{
 		//the effect that will be shown when collected the coin
 		public GameObject CollectedEffect;
+		public GameObject SparkEffect;
 
 		//called by Submarine script
 		public void Collect()
 		{
 			if (CollectedEffect != null)
 				Instantiate(CollectedEffect, transform.position, Quaternion.identity);
+			if (SparkEffect != null)
+				Instantiate(SparkEffect, transform.position, Quaternion.identity);
 			//play sound
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundCollectCoin);
 			//destroy the coin after collected
