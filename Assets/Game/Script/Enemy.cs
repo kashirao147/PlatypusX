@@ -22,12 +22,21 @@ namespace PhoenixaStudio
 		{
 			if (isHumanEnemy)
 			{
-				animator.Play("Attacking");
+				
+				  AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+				// Example: check if "Run" animation is playing
+				if (stateInfo.IsName("Die"))
+				{
+					return;
+				}
+					animator.Play("Attacking");
 			}
 			//check if this object is the bomb
 			if (gameObject.CompareTag("Bomb"))
 			{
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundExplosion);
+				
 			}
 			//check and spawn the destroy fx
 			if (destroyFX)
@@ -41,10 +50,25 @@ namespace PhoenixaStudio
 			if (gameObject.CompareTag("Bomb"))
 				GlobalValue.BombDestroy++;
 
-			if (forceDestroy || destroyWhenHit)
+			if (forceDestroy || destroyWhenHit) {
+
+				if (isHumanEnemy)
+				{
+					animator.Play("Die");
+				}
+				else
+				{
+					
 				Destroy(gameObject);
-			else
+				}
+			}	
+			 else
+
 				GetComponent<Collider2D>().enabled = false;
 		}
+		public void DestroyObject() {
+			Destroy(gameObject);
+		}
 	}
+	
 }
