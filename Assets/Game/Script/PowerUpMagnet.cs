@@ -21,6 +21,7 @@ namespace PhoenixaStudio
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpMagnet);
 
 				GlobalValue.CollectMagnetPowerUp++;
+				GlobalValue.RefreashIngameMissionUI();
 
 				Destroy(gameObject);
 			}

@@ -20,7 +20,7 @@ namespace PhoenixaStudio
 				other.GetComponent<Player>().UseShield();
 				//Add number of shield is collected
 				GlobalValue.CollectShieldPowerUp++;
-
+				GlobalValue.RefreashIngameMissionUI();
 				Destroy(gameObject);
 			}
 		}

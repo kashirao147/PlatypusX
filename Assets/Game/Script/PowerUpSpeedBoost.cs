@@ -22,6 +22,7 @@ namespace PhoenixaStudio
 				other.GetComponent<Player>().UseSpeedBoost();
 				//Add number of speed boost powerups collected
 				GlobalValue.CollectSpeedBoostPowerUp++;
+				GlobalValue.RefreashIngameMissionUI();
 
 				Destroy(gameObject);
 			}

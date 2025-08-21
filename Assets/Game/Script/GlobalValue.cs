@@ -82,11 +82,22 @@ namespace PhoenixaStudio
 		/// MISSION
 		/// </summary>
 		/// <value>The shark killed.</value>
+		/// 
+		/// 
+		public static void RefreashIngameMissionUI()
+		{
+			InGameMissionUIController inGameMissionUIController = FindFirstObjectByType<InGameMissionUIController>();
+				if (inGameMissionUIController != null)
+				{
+					inGameMissionUIController.RefreshUI();
+				}
+		}
 
 		public static int SharkKilled
 		{
 			get { return PlayerPrefs.GetInt("SharkKilled", 0); }
 			set { PlayerPrefs.SetInt("SharkKilled", value); }
+			
 		}
 
 		public static bool isStartSharkKilled
@@ -177,7 +188,7 @@ namespace PhoenixaStudio
 		{
 			get { return PlayerPrefs.GetInt("isStartCollectSpeedBoostPowerUp", 0) == 1; }
 			set { PlayerPrefs.SetInt("isStartCollectSpeedBoostPowerUp", value ? 1 : 0); }
-			
+
 		}
 
 		public static int PlayGame
@@ -185,5 +196,6 @@ namespace PhoenixaStudio
 			get { return PlayerPrefs.GetInt("PlayGame", 0); }
 			set { PlayerPrefs.SetInt("PlayGame", value); }
 		}
+		
 	}
 }

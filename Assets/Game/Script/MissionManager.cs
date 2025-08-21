@@ -289,6 +289,7 @@ namespace PhoenixaStudio
 					default:
 						break;
 				}
+
 			}
 
 			if (isAnyTaskCompleted())

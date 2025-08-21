@@ -30,6 +30,7 @@ namespace PhoenixaStudio
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpGun);
 
 				GlobalValue.CollectBulletPowerUp++;
+				GlobalValue.RefreashIngameMissionUI();
 
 				Destroy(gameObject);
 			}

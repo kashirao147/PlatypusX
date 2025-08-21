@@ -51,6 +51,7 @@ namespace PhoenixaStudio
 
 			if (gameObject.CompareTag("Bomb"))
 				GlobalValue.BombDestroy++;
+				GlobalValue.RefreashIngameMissionUI();
 
 			if (forceDestroy || destroyWhenHit)
 			{
@@ -61,7 +62,7 @@ namespace PhoenixaStudio
 
 					StartCoroutine(CoinSend());
 					FindAnyObjectByType<ShakeCamera>().DoShake();
-					
+
 					animator.Play("Die");
 				}
 				else

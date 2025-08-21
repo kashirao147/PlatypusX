@@ -301,6 +301,7 @@ namespace PhoenixaStudio
 			GlobalValue.Rocket--;
 			SoundManager.PlaySfx(soundRocket);
 			GlobalValue.UseRocket++;
+			GlobalValue.RefreashIngameMissionUI();
 
 		}
 
@@ -345,6 +346,7 @@ namespace PhoenixaStudio
 			timeBegin = Time.time;
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
 			GlobalValue.UseShield++;
+			GlobalValue.RefreashIngameMissionUI();
 		}
 
 		public void UseMagnet()
