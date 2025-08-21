@@ -59,8 +59,9 @@ namespace PhoenixaStudio
             var go = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
             if (go.TryGetComponent<Rigidbody2D>(out var rb))
             {
+                float speed = Random.Range(projectileSpeed, projectileSpeed * 1.5f);
                 // Face right? We use the cannon’s local right as forward.
-                rb.velocity = muzzle.right * projectileSpeed * -1;
+                rb.velocity = muzzle.right * speed * -1;
             }
 
             // Punch / recoil
