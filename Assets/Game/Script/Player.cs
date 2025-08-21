@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 namespace PhoenixaStudio
 {
 	public class Player : MonoBehaviour
@@ -40,7 +41,7 @@ namespace PhoenixaStudio
 		public float timeUseShield = 5;
 		public float shieldEnegry { get; set; }
 		float timeBegin;
-		bool isUsingShield = false;
+		public bool isUsingShield = false;
 
 		[Header("Magnet")]
 		public Magnet Magnet;
@@ -93,7 +94,10 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-
+			if (SceneManager.GetActiveScene().name.ToLower().Contains("snow"))
+			{
+				isSnowLevel = true;
+			}
 			//find the ShakeCamera object
 			SharkCamera = FindObjectOfType<ShakeCamera>();
 			//init the rigidbody

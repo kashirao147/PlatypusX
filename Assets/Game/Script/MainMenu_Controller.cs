@@ -9,6 +9,7 @@ namespace PhoenixaStudio
 		bool isMoveUp = false;
 		public Text bullet;
 		public Text rocket;
+		public Text Shield;
 
 		bool isFire = false;
 
@@ -20,9 +21,18 @@ namespace PhoenixaStudio
 			//Fire the bullet
 			if (isFire)
 				GameManager.Instance.Player.FireBullet();
+			if (GameManager.Instance.Player.shieldEnegry >= 100 || !GameManager.Instance.Player.isUsingShield )
+			{
+				Shield.transform.parent.GetChild(1).gameObject.SetActive(true);
+			}
+			else
+			{
+				Shield.transform.parent.GetChild(1).gameObject.SetActive(false);
+			}
 			//Display the rocket and bullet value
 			rocket.text = GlobalValue.Rocket + "";
 			bullet.text = GlobalValue.Bullet + "";
+			Shield.text = GlobalValue.CollectShieldPowerUp + "";
 		}
 
 		public void UseShield()
