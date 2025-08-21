@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 namespace PhoenixaStudio
 {
 	public class Enemy : MonoBehaviour
 	{
+		public GameObject CollectedEffect;
 		//deal damage to the player
 		public int damage = 20;
 		//add the score when this enemy get killed
@@ -22,21 +24,21 @@ namespace PhoenixaStudio
 		{
 			if (isHumanEnemy)
 			{
-				
-				  AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+				AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
 				// Example: check if "Run" animation is playing
 				if (stateInfo.IsName("Die"))
 				{
 					return;
 				}
-					animator.Play("Attacking");
+				animator.Play("Attacking");
 			}
 			//check if this object is the bomb
 			if (gameObject.CompareTag("Bomb"))
 			{
 				SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundExplosion);
-				
+
 			}
 			//check and spawn the destroy fx
 			if (destroyFX)
@@ -50,25 +52,45 @@ namespace PhoenixaStudio
 			if (gameObject.CompareTag("Bomb"))
 				GlobalValue.BombDestroy++;
 
-			if (forceDestroy || destroyWhenHit) {
+			if (forceDestroy || destroyWhenHit)
+			{
 
 				if (isHumanEnemy)
 				{
+
+
+					StartCoroutine(CoinSend());
+					FindAnyObjectByType<ShakeCamera>().DoShake();
+					
 					animator.Play("Die");
 				}
 				else
 				{
-					
-				Destroy(gameObject);
+
+					Destroy(gameObject);
 				}
-			}	
-			 else
+			}
+			else
 
 				GetComponent<Collider2D>().enabled = false;
 		}
-		public void DestroyObject() {
+		public void DestroyObject()
+		{
 			Destroy(gameObject);
 		}
+
+		IEnumerator CoinSend()
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				if(CollectedEffect!=null)
+				Instantiate(CollectedEffect, transform.position, Quaternion.identity);
+				yield return new WaitForSeconds(0.02f);
+				GlobalValue.Coin++;
+				
+			}
+		}
 	}
+	
 	
 }
