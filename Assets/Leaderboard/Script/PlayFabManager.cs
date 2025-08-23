@@ -67,6 +67,8 @@ public class PlayFabManager : MonoBehaviour
 
     public void OnSuccess(LoginResult result)
     {
+        FindObjectOfType<VercelRealtime>()?.OnPlayFabLogin(result);
+
         Debug.Log("Sccessfuly login/account created!");
         string name = null;
         if (result.InfoResultPayload.PlayerProfile != null)
