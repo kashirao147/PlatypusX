@@ -61,15 +61,14 @@ function isWebSocketUpgrade(req) {
 }
 
 export async function GET(req) {
-  // Non-WS → health JSON
   if (!isWebSocketUpgrade(req)) {
     return new Response(JSON.stringify({ ok: true, connected: socketsByPid.size }), {
       status: 200, headers: { "content-type": "application/json" }
     });
   }
 
-  // numeric indices
   const pair = new WebSocketPair();
+  // numeric indices are important in Edge runtime
   const client = pair[0];
   const server = pair[1];
 
@@ -113,9 +112,7 @@ export async function GET(req) {
       return;
     }
 
-    if (msg.type === "ping") {
-      server.send(JSON.stringify({ type: "pong", t: Date.now() })); return;
-    }
+    if (msg.type === "ping") { server.send(JSON.stringify({ type: "pong", t: Date.now() })); return; }
 
     server.send(JSON.stringify({ type: "error", reason: "unknown_type" }));
   });
