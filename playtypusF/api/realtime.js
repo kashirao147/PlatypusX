@@ -1,9 +1,7 @@
 // api/realtime.js  (Vercel Edge Function)
 export const config = { runtime: "edge" };
 
-/** -------- In-memory connections (single instance) --------
- * For production/multi-instance, back this with Redis pub/sub.
- */
+/* ---------------- in-memory connections ---------------- */
 const socketsByPid = new Map(); // PlayFabId -> Set<WebSocket>
 function addSocket(pid, ws) {
   let set = socketsByPid.get(pid);
@@ -30,9 +28,9 @@ function pushTo(pid, payload) {
   return n;
 }
 
-/** -------- PlayFab helpers -------- */
-const TITLE_ID = process.env.PLAYFAB_TITLE_ID;     // e.g. "12345"
-const SECRET   = process.env.PLAYFAB_SECRET_KEY;   // Title Secret Key
+/* ---------------- PlayFab helpers ---------------- */
+const TITLE_ID = process.env.PLAYFAB_TITLE_ID;
+const SECRET   = process.env.PLAYFAB_SECRET_KEY;
 
 async function authTicket(sessionTicket) {
   const r = await fetch(`https://${TITLE_ID}.playfabapi.com/Server/AuthenticateSessionTicket`, {
@@ -57,10 +55,24 @@ async function getChallenge(chId) {
   try { return meta ? JSON.parse(meta) : null; } catch { return null; }
 }
 
-/** -------- Handler (Edge WS upgrade) -------- */
+/* ---------------- upgrade detection (more tolerant) ---------------- */
+function isWebSocketUpgrade(req) {
+  const up1   = req.headers.get("upgrade");
+  const up2   = req.headers.get("Upgrade");
+  const conn  = req.headers.get("connection") || req.headers.get("Connection") || "";
+  const key   = req.headers.get("sec-websocket-key");
+  // accept if any of these indicate a WS upgrade
+  if (key) return true;
+  if (up1 && up1.toLowerCase() === "websocket") return true;
+  if (up2 && up2.toLowerCase() === "websocket") return true;
+  if (/\bupgrade\b/i.test(conn)) return true;
+  return false;
+}
+
+/* ---------------- handler ---------------- */
 export default async function handler(req) {
-  // Hitting in a browser? Return JSON status (not a WS upgrade).
-  if (req.headers.get("upgrade") !== "websocket") {
+  // If hit normally in a browser/tab → show JSON to confirm route exists
+  if (!isWebSocketUpgrade(req)) {
     return new Response(JSON.stringify({ ok: true, connected: socketsByPid.size }), {
       status: 200, headers: { "content-type": "application/json" }
     });
@@ -80,7 +92,7 @@ export default async function handler(req) {
       return;
     }
 
-    // 1) Authenticate via PlayFab SessionTicket
+    // 1) auth
     if (msg.type === "auth") {
       if (!msg.sessionTicket) { server.close(1008, "missing_session_ticket"); return; }
       try {
@@ -93,11 +105,10 @@ export default async function handler(req) {
       return;
     }
 
-    // Require auth for all other messages
+    // require auth afterwards
     if (!server.__pid) { server.close(1008, "unauthenticated"); return; }
 
-    // 2) Challenger -> notify target instantly
-    // { type:"notify_challenge", challengeId, targetId }
+    // 2) challenger → notify target
     if (msg.type === "notify_challenge" && msg.challengeId && msg.targetId) {
       const meta = await getChallenge(msg.challengeId);
       if (!meta || meta.status !== "pending" || !meta.participants?.includes(msg.targetId)) {
@@ -114,8 +125,11 @@ export default async function handler(req) {
       return;
     }
 
-    // 3) Ping/Pong
-    if (msg.type === "ping") { server.send(JSON.stringify({ type: "pong", t: Date.now() })); return; }
+    // 3) ping
+    if (msg.type === "ping") {
+      server.send(JSON.stringify({ type: "pong", t: Date.now() }));
+      return;
+    }
 
     server.send(JSON.stringify({ type: "error", reason: "unknown_type" }));
   });
@@ -123,6 +137,5 @@ export default async function handler(req) {
   server.addEventListener("close", () => delSocket(server));
   server.addEventListener("error", () => delSocket(server));
 
-  // Upgrade
   return new Response(null, { status: 101, webSocket: client });
 }
