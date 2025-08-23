@@ -1,5 +1,5 @@
 {
-  "name": "realtime-ws",
+  "name": "realtime-ws-js",
   "private": true,
   "scripts": {
     "dev": "next dev",

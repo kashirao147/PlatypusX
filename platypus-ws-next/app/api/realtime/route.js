@@ -68,7 +68,7 @@ export async function GET(req) {
     });
   }
 
-  // IMPORTANT: use numeric indices
+  // numeric indices
   const pair = new WebSocketPair();
   const client = pair[0];
   const server = pair[1];
