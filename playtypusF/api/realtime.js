@@ -1,7 +1,7 @@
 // api/realtime.js  (Vercel Edge Function)
 export const config = { runtime: "edge" };
 
-/* ---------------- in-memory connections ---------------- */
+/* ------------ in-memory connections ------------ */
 const socketsByPid = new Map(); // PlayFabId -> Set<WebSocket>
 function addSocket(pid, ws) {
   let set = socketsByPid.get(pid);
@@ -22,13 +22,11 @@ function pushTo(pid, payload) {
   if (!set) return 0;
   const msg = JSON.stringify(payload);
   let n = 0;
-  for (const ws of set) {
-    if (ws.readyState === ws.OPEN) { ws.send(msg); n++; }
-  }
+  for (const ws of set) if (ws.readyState === ws.OPEN) { ws.send(msg); n++; }
   return n;
 }
 
-/* ---------------- PlayFab helpers ---------------- */
+/* ------------ PlayFab helpers ------------ */
 const TITLE_ID = process.env.PLAYFAB_TITLE_ID;
 const SECRET   = process.env.PLAYFAB_SECRET_KEY;
 
@@ -55,31 +53,28 @@ async function getChallenge(chId) {
   try { return meta ? JSON.parse(meta) : null; } catch { return null; }
 }
 
-/* ---------------- upgrade detection (more tolerant) ---------------- */
+/* ------------ upgrade detection (tolerant) ------------ */
 function isWebSocketUpgrade(req) {
-  const up1   = req.headers.get("upgrade");
-  const up2   = req.headers.get("Upgrade");
-  const conn  = req.headers.get("connection") || req.headers.get("Connection") || "";
-  const key   = req.headers.get("sec-websocket-key");
-  // accept if any of these indicate a WS upgrade
-  if (key) return true;
-  if (up1 && up1.toLowerCase() === "websocket") return true;
-  if (up2 && up2.toLowerCase() === "websocket") return true;
-  if (/\bupgrade\b/i.test(conn)) return true;
-  return false;
+  const up = req.headers.get("upgrade") || req.headers.get("Upgrade");
+  const conn = req.headers.get("connection") || req.headers.get("Connection") || "";
+  const key = req.headers.get("sec-websocket-key");
+  return !!key || (up && up.toLowerCase() === "websocket") || /\bupgrade\b/i.test(conn);
 }
 
-/* ---------------- handler ---------------- */
+/* ------------ handler ------------ */
 export default async function handler(req) {
-  // If hit normally in a browser/tab → show JSON to confirm route exists
+  // Non-WS requests: simple JSON for sanity checks
   if (!isWebSocketUpgrade(req)) {
     return new Response(JSON.stringify({ ok: true, connected: socketsByPid.size }), {
       status: 200, headers: { "content-type": "application/json" }
     });
   }
 
+  // ❗ CRITICAL: use numeric indexes, not Object.values()
   const pair = new WebSocketPair();
-  const [client, server] = Object.values(pair);
+  const client = pair[0];
+  const server = pair[1];
+
   server.accept();
 
   server.addEventListener("message", async (evt) => {
@@ -88,8 +83,7 @@ export default async function handler(req) {
       const raw = typeof evt.data === "string" ? evt.data : new TextDecoder().decode(evt.data);
       msg = JSON.parse(raw);
     } catch {
-      server.send(JSON.stringify({ type: "error", reason: "bad_json" }));
-      return;
+      server.send(JSON.stringify({ type: "error", reason: "bad_json" })); return;
     }
 
     // 1) auth
@@ -105,15 +99,14 @@ export default async function handler(req) {
       return;
     }
 
-    // require auth afterwards
+    // must be authed
     if (!server.__pid) { server.close(1008, "unauthenticated"); return; }
 
     // 2) challenger → notify target
     if (msg.type === "notify_challenge" && msg.challengeId && msg.targetId) {
       const meta = await getChallenge(msg.challengeId);
       if (!meta || meta.status !== "pending" || !meta.participants?.includes(msg.targetId)) {
-        server.send(JSON.stringify({ type: "notify_error", reason: "verify_failed" }));
-        return;
+        server.send(JSON.stringify({ type: "notify_error", reason: "verify_failed" })); return;
       }
       const delivered = pushTo(msg.targetId, {
         type: "challenge_request",
@@ -126,10 +119,7 @@ export default async function handler(req) {
     }
 
     // 3) ping
-    if (msg.type === "ping") {
-      server.send(JSON.stringify({ type: "pong", t: Date.now() }));
-      return;
-    }
+    if (msg.type === "ping") { server.send(JSON.stringify({ type: "pong", t: Date.now() })); return; }
 
     server.send(JSON.stringify({ type: "error", reason: "unknown_type" }));
   });
@@ -137,5 +127,6 @@ export default async function handler(req) {
   server.addEventListener("close", () => delSocket(server));
   server.addEventListener("error", () => delSocket(server));
 
+  // Upgrade
   return new Response(null, { status: 101, webSocket: client });
 }
