@@ -4,6 +4,16 @@ namespace PhoenixaStudio
 {
 	public class GameManager : MonoBehaviour
 	{
+		// e.g., wired to a button:
+		public AchievementsScreen achievementsScreen;
+
+		public void OpenAchievements()
+		{
+			achievementsScreen.Open();
+		}
+
+
+
 		public static GameManager Instance;
 
 		public enum GameState { Menu, Playing, Pause, GameOver }

@@ -69,7 +69,7 @@ public class PlayFabManager : MonoBehaviour
     {
         transform.GetChild(0).gameObject.SetActive(true);
         FindObjectOfType<VercelRealtime>()?.OnPlayFabLogin(result);
-
+        PlayFabAchievementService.ReportCoinsAndEvaluate(0,null);
        // On resume / after login
         PlayFabChallengeService.ResolveChallengeOnReopen(res => {
             if (!res.success) return;
