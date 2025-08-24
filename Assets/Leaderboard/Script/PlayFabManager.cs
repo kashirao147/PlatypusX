@@ -73,24 +73,56 @@ public class PlayFabManager : MonoBehaviour
        // On resume / after login
         PlayFabChallengeService.ResolveChallengeOnReopen(res => {
             if (!res.success) return;
+            //Global Events
+            GlobalEventService.FetchAndCacheLatest((ok, err, isNew) =>
+            {
+                if (!ok)
+                {
+                    Debug.LogWarning("Title News fetch failed: " + err);
+                    return;
+                }
 
-            if (res.state == "expired") {
+                // Optional: auto-show only if it changed since last time:
+                if (isNew || GlobalEventService.IsCachedEventNew())
+                {
+                    // Use your own popup UI (MessagePopup, custom panel, etc.)
+                    // Example using your MessagePopup:
+                  //  MessagePopup.ShowPopup(GlobalEventService.GetCachedBody());
+
+                    // Or enable a banner:
+                    // globalEventBannerGameObject.SetActive(true);
+
+                    //GlobalEventService.MarkSeen();
+                }
+            });
+
+
+
+
+
+
+
+            if (res.state == "expired")
+            {
 
                 WinnerPopup.ShowFromResolve(
                     res,
                     null,                 // optional: PlayFabId -> DisplayName
                     "WinnerScreen",      // your prefab path in Resources
-                    onOk: () => {
+                    onOk: () =>
+                    {
                         // anything you want after closing (e.g., refresh UI)
                     }
                 );
                 //MessagePopup.ShowPopup($"Challenge over. You {res.outcome}. My:{res.myScore} Opp:{res.oppScore}");
                 // Now your side is cleared; opponent will clear when they call this too.
             }
-            else if (res.state == "active") {
+            else if (res.state == "active")
+            {
                 Debug.Log($"Still active. My:{res.myScore} Opp:{res.oppScore}");
             }
-            else {
+            else
+            {
                 Debug.Log("No active challenge.");
             }
         }, err => Debug.LogError(err.GenerateErrorReport()));

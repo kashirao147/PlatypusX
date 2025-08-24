@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 namespace PhoenixaStudio
 {
@@ -8,8 +9,21 @@ namespace PhoenixaStudio
 		public Text score;
 		public Text best;
 
+		public Text GlobalEventTitle;
+		public Text GlobalEventMessage;
+
 		void Start()
 		{
+			if (GlobalEventService.GetCachedBody() != null && GlobalEventService.GetCachedBody() != "" &&  GlobalEventService.GetCachedTitle() != "")
+			{
+				
+				GlobalEventMessage.text = GlobalEventService.GetCachedBody();
+				GlobalEventTitle.text = GlobalEventService.GetCachedTitle();
+			}
+			else
+			{
+				GlobalEventTitle.transform.parent.gameObject.SetActive(false);
+			}
 			//display the score and best value
 			// e.g., p1Total, p2Total are your *current totals*
 			PlayFabChallengeService.UpdateActiveScore(
