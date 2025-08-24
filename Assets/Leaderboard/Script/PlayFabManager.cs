@@ -67,7 +67,59 @@ public class PlayFabManager : MonoBehaviour
 
     public void OnSuccess(LoginResult result)
     {
+        transform.GetChild(0).gameObject.SetActive(true);
         FindObjectOfType<VercelRealtime>()?.OnPlayFabLogin(result);
+
+       // On resume / after login
+        PlayFabChallengeService.ResolveChallengeOnReopen(res => {
+            if (!res.success) return;
+
+            if (res.state == "expired") {
+
+                WinnerPopup.ShowFromResolve(
+                    res,
+                    null,                 // optional: PlayFabId -> DisplayName
+                    "WinnerScreen",      // your prefab path in Resources
+                    onOk: () => {
+                        // anything you want after closing (e.g., refresh UI)
+                    }
+                );
+                //MessagePopup.ShowPopup($"Challenge over. You {res.outcome}. My:{res.myScore} Opp:{res.oppScore}");
+                // Now your side is cleared; opponent will clear when they call this too.
+            }
+            else if (res.state == "active") {
+                Debug.Log($"Still active. My:{res.myScore} Opp:{res.oppScore}");
+            }
+            else {
+                Debug.Log("No active challenge.");
+            }
+        }, err => Debug.LogError(err.GenerateErrorReport()));
+
+
+
+
+        //  PlayFabChallengeService.CheckChallengeOnReopen(res =>
+        // {
+        //     if (!res.success) return;
+
+        //     switch (res.state)
+        //     {
+        //         case "expired":
+        //             MessagePopup.ShowPopup("Challenge is complete");
+        //             Debug.Log("Challenge is complete (time over). ID: " + res.challenge.id);
+        //             // TODO: refresh UI (hide active panel, refresh inbox, etc.)
+        //             break;
+
+        //         case "active":
+        //             Debug.Log("Challenge still active vs: " + (res.challenge.from));
+        //             break;
+
+        //         case "none":
+        //             Debug.Log("No active challenge.");
+        //             break;
+        //     }
+        // },
+        // err => Debug.LogError(err.GenerateErrorReport()));
 
         Debug.Log("Sccessfuly login/account created!");
         string name = null;

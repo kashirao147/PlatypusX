@@ -11,7 +11,7 @@ public class VercelRealtime : MonoBehaviour
 {
     public static VercelRealtime I;
 
-    [SerializeField] private string wsUrl = "wss://YOUR-APP.vercel.app/api/realtime";
+    [SerializeField] private string wsUrl = "wss://platypus-x-yjkq.vercel.app/api/realtime";
     private WebSocket ws;
     private string _sessionTicket;
     private string _playFabId;
@@ -23,6 +23,7 @@ public class VercelRealtime : MonoBehaviour
 
     // Call this after your PlayFab login succeeds
     public void OnPlayFabLogin(LoginResult res) {
+        Debug.Log("Login playfab vercel start");
         _playFabId = res.PlayFabId;
         _sessionTicket = res.SessionTicket;
         _ = ConnectAndAuth();
@@ -30,17 +31,18 @@ public class VercelRealtime : MonoBehaviour
 
     async Task ConnectAndAuth() {
         ws = new WebSocket(wsUrl);
-
+        Debug.Log(ws.State + " state   ");
         ws.OnOpen += () => {
             var auth = JsonConvert.SerializeObject(new { type = "auth", sessionTicket = _sessionTicket });
             ws.SendText(auth);
+         Debug.Log("Login playfab vercel start 1");
         };
 
         ws.OnMessage += (bytes) => {
             var json = Encoding.UTF8.GetString(bytes);
             Handle(json);
+         Debug.Log("Login playfab vercel start 2");
         };
-
         ws.OnError += (err) => Debug.LogError("WS error: " + err);
         ws.OnClose += (code) => Debug.LogWarning("WS closed: " + code);
 
@@ -68,8 +70,10 @@ public class VercelRealtime : MonoBehaviour
                 break;
 
             case "challenge_request":
+            
                 // Target receives instant popup; optionally confirm via CloudScript
                 Exec<ChallengeResponse>("GetChallenge", new { ChallengeId = m.id }, r => {
+                    Debug.Log("Challenge Recieve " + r.challenge.from + "  " + r.challenge.createdAt);
                     if (r != null && r.success && r.challenge.status == "pending")
                     {
                         // Show your Accept/Deny UI for this single request

@@ -17,8 +17,10 @@ public class FriendListData : MonoBehaviour
     [SerializeField] Transform ParrentTransformdisplayFriend;
     [SerializeField] GameObject FriendCardItem;
 
-    [Header("Challenge Screen")]
-    [SerializeField] private CreateChallengeScreen createChallengeScreen;
+
+  
+
+    
     
    
 
@@ -63,21 +65,26 @@ public class FriendListData : MonoBehaviour
 
     private void OnChallengeClicked(string friendPlayFabId)
     {
-        // Open your Create Challenge screen and pass the id
-        if (createChallengeScreen != null)
-        {
-            // If you want to also show the friendly name, you can look it up from the current list.
-            var info = _friends?.Find(x => x.FriendPlayFabId == friendPlayFabId);
-            var friendlyName = (info != null && !string.IsNullOrEmpty(info.TitleDisplayName))
-                                ? info.TitleDisplayName
-                                : friendPlayFabId;
+        PlayFabChallengeService.SendChallenge(friendPlayFabId, res => {
+            if (res.success) MessagePopup.ShowPopup("Challenge sent: " + res.challenge.id);
+            else MessagePopup.ShowPopup("Send failed: " + res.message);
+        }, err => Debug.LogError(err.GenerateErrorReport()));
+        
+        // // Open your Create Challenge screen and pass the id
+        // if (createChallengeScreen != null)
+        // {
+        //     // If you want to also show the friendly name, you can look it up from the current list.
+        //     var info = _friends?.Find(x => x.FriendPlayFabId == friendPlayFabId);
+        //     var friendlyName = (info != null && !string.IsNullOrEmpty(info.TitleDisplayName))
+        //                         ? info.TitleDisplayName
+        //                         : friendPlayFabId;
 
-            createChallengeScreen.Open(friendPlayFabId, friendlyName);
-        }
-        else
-        {
-            Debug.Log($"[FriendList] Challenge pressed for: {friendPlayFabId} (no screen hooked yet)");
-        }
+        //     createChallengeScreen.Open(friendPlayFabId, friendlyName);
+        // }
+        // else
+        // {
+        //     Debug.Log($"[FriendList] Challenge pressed for: {friendPlayFabId} (no screen hooked yet)");
+        // }
     }
 
     void DisplayPlayFabError(PlayFabError error) { Debug.Log(error.GenerateErrorReport()); }

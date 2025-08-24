@@ -1,0 +1,778 @@
+fileFormatVersion: 2
+guid: b134e9d35f5ad35429da114939df724e
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 479
+        width: 901
+        height: 521
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc66e15a37b09344aa3d1518abe693da
+      internalID: -1811620446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 859
+        width: 741
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ed143678c734e747a7efdc9a06e2a2d
+      internalID: -1188329378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 365
+        width: 341
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e387f17ac22625a4eada22447f0b7637
+      internalID: 451285195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 365
+        width: 341
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25c293a570512b842bff62f104e6bf6f
+      internalID: 231357695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 752
+        y: 315
+        width: 141
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf9758260000c3040b45b6f3f11dfccb
+      internalID: 1726509539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 315
+        width: 141
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a37c3b4e365173b45b4033d7bf8aae5f
+      internalID: 1684078259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 355
+        width: 341
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00f4187b0e24c224089e728afb2e3cde
+      internalID: 1852951263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 1444
+        y: 355
+        width: 341
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 778dbbbb6c8e14646851273ffa246a2c
+      internalID: -624138740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 191
+        width: 341
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c787aa403c3c114ab908ea640ec037a
+      internalID: -1935831649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 151
+        width: 201
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 365994ecb40d6194f86f43b49b4cfcb7
+      internalID: 1226783630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 251
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36a8f43e87f29f14b8a06bbc50fc20fb
+      internalID: -1288327523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 265
+        width: 46
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 711d154b7ca25b547867d7ec60e4c5b3
+      internalID: 102118969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 1009
+        y: 251
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6c0ce0c865f9ae45827a7f2cf5091e0
+      internalID: 2130252071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 1428
+        y: 185
+        width: 112
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 285a1468313368d48962c0ce0e3364d1
+      internalID: -1977216663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 86
+        width: 156
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 228117d2eaa2907429e4bc763e73e3aa
+      internalID: -1399924611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 225
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd5a9a16aed9ec64f9a786b28d8e15d4
+      internalID: 2128710094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 225
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de4c21a3ef661224bb812afa8dc8b54b
+      internalID: 643120040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 894
+        y: 185
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e29f11d0003c87449b7010054095286
+      internalID: 598400543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 185
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 940c064b850eca24daccca12781c5069
+      internalID: -1147977261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_24
+      rect:
+        serializedVersion: 2
+        x: 1178
+        y: 185
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dd04d0fdf7df0a41a6f2d748476fadf
+      internalID: 215742652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_26
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 131
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da851e419aee109469d2e9aa0d36f6c0
+      internalID: -237392210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_27
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 131
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c85343324a4704f4b9b0b73dfeab150d
+      internalID: -966153080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_28
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 131
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f65bc6f544e5a4a45a2ad8a936a2919e
+      internalID: -2010388251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_30
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 29
+        width: 521
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5275adc6b57dda540a646246506311c9
+      internalID: 19352367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_31
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 0
+        width: 221
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0acceaf638da6474ca85f17e5eea4736
+      internalID: -1317018614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_32
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 0
+        width: 217
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2ec594424c36fa4a96054117357093f
+      internalID: 1280316284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winner_ui_spritesheet_43
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 0
+        width: 13
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f44563066dbdbe64fa90e0dfa2d10454
+      internalID: -966749876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      winner_ui_spritesheet_0: -1811620446
+      winner_ui_spritesheet_1: -1188329378
+      winner_ui_spritesheet_10: -1288327523
+      winner_ui_spritesheet_11: 102118969
+      winner_ui_spritesheet_12: 2130252071
+      winner_ui_spritesheet_13: 2086884431
+      winner_ui_spritesheet_14: 1935193841
+      winner_ui_spritesheet_15: -367384424
+      winner_ui_spritesheet_16: -1977216663
+      winner_ui_spritesheet_17: -1399924611
+      winner_ui_spritesheet_18: 2128710094
+      winner_ui_spritesheet_19: 643120040
+      winner_ui_spritesheet_2: 451285195
+      winner_ui_spritesheet_20: 1895295997
+      winner_ui_spritesheet_21: -1393239060
+      winner_ui_spritesheet_22: 598400543
+      winner_ui_spritesheet_23: -1147977261
+      winner_ui_spritesheet_24: 215742652
+      winner_ui_spritesheet_25: -309668633
+      winner_ui_spritesheet_26: -237392210
+      winner_ui_spritesheet_27: -966153080
+      winner_ui_spritesheet_28: -2010388251
+      winner_ui_spritesheet_29: 127748926
+      winner_ui_spritesheet_3: 231357695
+      winner_ui_spritesheet_30: 19352367
+      winner_ui_spritesheet_31: -1317018614
+      winner_ui_spritesheet_32: 1280316284
+      winner_ui_spritesheet_33: 2087436317
+      winner_ui_spritesheet_34: -732301756
+      winner_ui_spritesheet_35: 79582062
+      winner_ui_spritesheet_36: 38603281
+      winner_ui_spritesheet_37: -1541838071
+      winner_ui_spritesheet_38: -1717844522
+      winner_ui_spritesheet_39: 2026466133
+      winner_ui_spritesheet_4: 1726509539
+      winner_ui_spritesheet_40: 1659468163
+      winner_ui_spritesheet_41: -643932389
+      winner_ui_spritesheet_42: -65936119
+      winner_ui_spritesheet_43: -966749876
+      winner_ui_spritesheet_44: -1360323592
+      winner_ui_spritesheet_5: 1684078259
+      winner_ui_spritesheet_6: 1852951263
+      winner_ui_spritesheet_7: -624138740
+      winner_ui_spritesheet_8: -1935831649
+      winner_ui_spritesheet_9: 1226783630
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
