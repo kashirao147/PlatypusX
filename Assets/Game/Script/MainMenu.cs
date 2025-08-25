@@ -13,6 +13,9 @@ namespace PhoenixaStudio
 		public GameObject Gameover;
 		public GameObject Gamepause;
 		public GameObject Shop;
+		public GameObject Level;
+		public GameObject Achievements;
+		public GameObject FriendAndChallenge;
 		public GameObject Mission;
 		public GameObject Loading;
 		public GameObject Coin;
@@ -77,8 +80,10 @@ namespace PhoenixaStudio
 				MissionManager.Instance.GetAllRewarded();
 			//Show the loading object
 			Loading.SetActive(true);
-			SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+			//SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+			SceneManager.LoadSceneAsync(GlobalValue.getSelectedLevel());
 		}
+
 
 		public void Home()
 		{
@@ -91,6 +96,30 @@ namespace PhoenixaStudio
 		{
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
 			Shop.SetActive(true);
+		}
+		public void OpenAchievements()
+		{
+			if (!FindFirstObjectByType<PlayFabManager>().isLogin)
+			{
+				return;
+			}
+			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
+			Achievements.SetActive(true);
+		}
+		public void OpenOpenFriendAndChallenges()
+		{
+			if (!FindFirstObjectByType<PlayFabManager>().isLogin)
+			{
+				return;
+			}
+			
+			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
+			FriendAndChallenge.SetActive(true);
+		}
+		public void OpenLevelSelection()
+		{
+			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
+			Level.SetActive(true);
 		}
 
 		public void OpenSettings()

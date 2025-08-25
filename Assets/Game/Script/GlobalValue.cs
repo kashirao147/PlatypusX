@@ -56,6 +56,24 @@ namespace PhoenixaStudio
 			return PlayerPrefs.GetInt(ID.ToString(), 0) == 1;
 		}
 
+		public static bool isUnlockLevel(string ID)
+		{
+			return PlayerPrefs.GetInt(ID.ToString(), 0) == 1;
+		}
+		public static void UnlockLevel(string ID)
+		{
+			PlayerPrefs.SetInt(ID, 1);
+		}
+		public static string getSelectedLevel()
+		{
+			return PlayerPrefs.GetString("SelectedLevel", "Level1");
+		}
+		public static void setSelectedLevel(string ID)
+		{
+			PlayerPrefs.SetString("SelectedLevel", ID);
+		}
+		
+
 		public static void UnlockCharacter(int ID)
 		{
 			PlayerPrefs.SetInt(ID.ToString(), 1);

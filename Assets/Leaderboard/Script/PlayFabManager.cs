@@ -15,6 +15,7 @@ public class PlayFabManager : MonoBehaviour
     public InputField emailInput;
     public GameObject rowPrefab;
     public Transform rowParrent;
+    public bool isLogin=false;
     public static string DeviceUniqueIdentifier
     {
         get
@@ -67,8 +68,8 @@ public class PlayFabManager : MonoBehaviour
 
     public void OnSuccess(LoginResult result)
     {
-        transform.GetChild(0).gameObject.SetActive(true);
-        FindObjectOfType<VercelRealtime>()?.OnPlayFabLogin(result);
+
+        isLogin = true;
         PlayFabAchievementService.ReportCoinsAndEvaluate(0,null);
        // On resume / after login
         PlayFabChallengeService.ResolveChallengeOnReopen(res => {

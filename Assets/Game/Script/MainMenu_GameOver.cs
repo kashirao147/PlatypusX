@@ -14,58 +14,61 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-			if (GlobalEventService.GetCachedBody() != null && GlobalEventService.GetCachedBody() != "" &&  GlobalEventService.GetCachedTitle() != "")
+			if (FindFirstObjectByType<PlayFabManager>().isLogin)
 			{
-				
-				GlobalEventMessage.text = GlobalEventService.GetCachedBody();
-				GlobalEventTitle.text = GlobalEventService.GetCachedTitle();
-			}
-			else
-			{
-				GlobalEventTitle.transform.parent.gameObject.SetActive(false);
-			}
-			//display the score and best value
-			// e.g., p1Total, p2Total are your *current totals*
-			PlayFabChallengeService.UpdateActiveScore(
-				myScore: GameManager.Instance.Score,
-
-				appendHistory: true,          // set false if you don't need per-round history
-				done: res =>
+				if (GlobalEventService.GetCachedBody() != null && GlobalEventService.GetCachedBody() != "" && GlobalEventService.GetCachedTitle() != "")
 				{
-					if (!res.success)
+					GlobalEventTitle.transform.parent.gameObject.SetActive(true);
+
+					GlobalEventMessage.text = GlobalEventService.GetCachedBody();
+					GlobalEventTitle.text = GlobalEventService.GetCachedTitle();
+				}
+				else
+				{
+					GlobalEventTitle.transform.parent.gameObject.SetActive(false);
+				}
+				//display the score and best value
+				// e.g., p1Total, p2Total are your *current totals*
+				PlayFabChallengeService.UpdateActiveScore(
+					myScore: GameManager.Instance.Score,
+
+					appendHistory: true,          // set false if you don't need per-round history
+					done: res =>
 					{
-
-
-						// coinsEarnedThisGame is your match result (could be 0)
-						/*PlayFabAchievementService.ReportCoinsAndEvaluate(GlobalValue.Coin, res =>
+						if (!res.success)
 						{
-							if (!res.success) return;
 
-							if (res.newAchievements != null && res.newAchievements.Length > 0)
+
+							// coinsEarnedThisGame is your match result (could be 0)
+							/*PlayFabAchievementService.ReportCoinsAndEvaluate(GlobalValue.Coin, res =>
 							{
-								// Show just one popup (first new achievement)
-								var newId = res.newAchievements[0];
+								if (!res.success) return;
 
-								// For the popup, we need the defs to resolve the correct icon.
-								PlayFabAchievementService.GetAchievementsOverview(ov =>
+								if (res.newAchievements != null && res.newAchievements.Length > 0)
 								{
-									if (ov == null || !ov.success) { Debug.LogWarning("Overview failed"); return; }
-									if (!ov.success) return;
+									// Show just one popup (first new achievement)
+									var newId = res.newAchievements[0];
 
-									// Build a sprite resolver (you already have this inside the screen)
-									// For a quick tect map or use Resources.Load<Sprite>(est, create a ScriptableObjname).
-									System.Func<string, Sprite> resolve = (n) => Resources.Load<Sprite>(n);
-
-									NewAchievementPopup.ShowOne(newId, ov.defs, resolve, onOK: () =>
+									// For the popup, we need the defs to resolve the correct icon.
+									PlayFabAchievementService.GetAchievementsOverview(ov =>
 									{
-										// Ack so it doesn't show again
-										PlayFabAchievementService.AckAchievementNotifications(new[] { newId }, _ => { }, err => { });
-									});
+										if (ov == null || !ov.success) { Debug.LogWarning("Overview failed"); return; }
+										if (!ov.success) return;
 
-								}, err => Debug.LogError(err.GenerateErrorReport()));
-							}
-						});*/
-						ShowAchievementPopupsAfterMatch(GlobalValue.Coin);
+										// Build a sprite resolver (you already have this inside the screen)
+										// For a quick tect map or use Resources.Load<Sprite>(est, create a ScriptableObjname).
+										System.Func<string, Sprite> resolve = (n) => Resources.Load<Sprite>(n);
+
+										NewAchievementPopup.ShowOne(newId, ov.defs, resolve, onOK: () =>
+										{
+											// Ack so it doesn't show again
+											PlayFabAchievementService.AckAchievementNotifications(new[] { newId }, _ => { }, err => { });
+										});
+
+									}, err => Debug.LogError(err.GenerateErrorReport()));
+								}
+							});*/
+							ShowAchievementPopupsAfterMatch(GlobalValue.Coin);
 
 
 
@@ -78,42 +81,42 @@ namespace PhoenixaStudio
 
 
 
-						// On resume / after login
-						PlayFabChallengeService.ResolveChallengeOnReopen(res =>
-						{
-							if (!res.success) return;
-
-							if (res.state == "expired")
+							// On resume / after login
+							PlayFabChallengeService.ResolveChallengeOnReopen(res =>
 							{
+								if (!res.success) return;
 
-								WinnerPopup.ShowFromResolve(
-									res,
-									null,                 // optional: PlayFabId -> DisplayName
-									"WinnerScreen",      // your prefab path in Resources
-									onOk: () =>
-									{
-										// anything you want after closing (e.g., refresh UI)
-									}
-								);
-								//MessagePopup.ShowPopup($"Challenge over. You {res.outcome}. My:{res.myScore} Opp:{res.oppScore}");
-								// Now your side is cleared; opponent will clear when they call this too.
-							}
-							else if (res.state == "active")
-							{
-								Debug.Log($"Still active. My:{res.myScore} Opp:{res.oppScore}");
-							}
-							else
-							{
-								Debug.Log("No active challenge.");
-							}
-						}, err => Debug.LogError(err.GenerateErrorReport()));
+								if (res.state == "expired")
+								{
 
-						Debug.LogWarning(res.message);
-					}
-				},
-				fail: err => Debug.LogError(err.GenerateErrorReport())
-			);
+									WinnerPopup.ShowFromResolve(
+										res,
+										null,                 // optional: PlayFabId -> DisplayName
+										"WinnerScreen",      // your prefab path in Resources
+										onOk: () =>
+										{
+											// anything you want after closing (e.g., refresh UI)
+										}
+									);
+									//MessagePopup.ShowPopup($"Challenge over. You {res.outcome}. My:{res.myScore} Opp:{res.oppScore}");
+									// Now your side is cleared; opponent will clear when they call this too.
+								}
+								else if (res.state == "active")
+								{
+									Debug.Log($"Still active. My:{res.myScore} Opp:{res.oppScore}");
+								}
+								else
+								{
+									Debug.Log("No active challenge.");
+								}
+							}, err => Debug.LogError(err.GenerateErrorReport()));
 
+							Debug.LogWarning(res.message);
+						}
+					},
+					fail: err => Debug.LogError(err.GenerateErrorReport())
+				);
+			}
 			score.text = GameManager.Instance.Score + "";
 			best.text = "Best: " + GlobalValue.Best;
 		}

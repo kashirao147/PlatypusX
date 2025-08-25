@@ -94,7 +94,7 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-			if (SceneManager.GetActiveScene().name.ToLower().Contains("snow"))
+			if (SceneManager.GetActiveScene().name.ToLower().Contains("1"))
 			{
 				isSnowLevel = true;
 			}

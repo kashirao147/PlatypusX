@@ -197,8 +197,8 @@ namespace PhoenixaStudio
 			//check best
 			if (Score > GlobalValue.Best)
 				GlobalValue.Best = Score;
-            
-            playfab.sendLeaderboard(Score);
+            if(playfab.isLogin)
+            	playfab.sendLeaderboard(Score);
 			//Check mission
 			MissionManager.Instance.CheckMissions();
 			State = GameState.GameOver;
