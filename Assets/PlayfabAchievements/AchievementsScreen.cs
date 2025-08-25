@@ -84,10 +84,10 @@ public class AchievementsScreen : MonoBehaviour
             var unlockedSet = new HashSet<string>(ov.unlocked ?? new List<string>());
             foreach (var def in ov.defs)
             {
-                if (ov.nextTarget.coins == def.coins)
-                {
-                    if (coinIcon)   coinIcon.sprite   = Resolve(def.sprite);
-                }
+                // if (ov.nextTarget.coins == def.coins)
+                // {
+                //     if (coinIcon)   coinIcon.sprite   = Resolve(def.sprite);
+                // }
                 var item = Instantiate(itemPrefab, content);
                 // choose generic locked/unlocked bg sprites you added to the prefab
                 item.Setup(def, unlockedSet.Contains(def.id), ov.totalCoins, Resolve);

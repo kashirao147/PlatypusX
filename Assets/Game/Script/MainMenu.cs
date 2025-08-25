@@ -118,8 +118,9 @@ namespace PhoenixaStudio
 			{
 				return;
 			}
+			GameManager.Instance.OpenAchievements();
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
-			Achievements.SetActive(true);
+			
 		}
 		public void OpenOpenFriendAndChallenges()
 		{
