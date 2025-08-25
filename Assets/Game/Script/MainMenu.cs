@@ -21,6 +21,7 @@ namespace PhoenixaStudio
 		public GameObject Mission;
 		public GameObject Loading;
 		public GameObject Coin;
+		public Text PlayerTitle;
 
 		[Header("Settings")]
 		public GameObject Settings;
@@ -39,6 +40,8 @@ namespace PhoenixaStudio
 		// Use this for initialization
 		void Start()
 		{
+			PlayerTitle.text = GlobalValue.GetPlayerTitle();
+
 			if (!GlobalValue.getGameRestart())
 			{
 				FirstTimeLevelSelectButton.SetActive(false);

@@ -1,3 +1,4 @@
+using PhoenixaStudio;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,9 @@ public class AchievementItemView : MonoBehaviour
                       System.Func<string, string> nameLocalizer = null)
     {
         _spriteResolver = spriteResolver;
+        if(isUnlocked && def.id.Contains("title")){
+            GlobalValue.SetPlayerTitle(def.sprite);
+        }
 
         // BG state
         if (slotBG) slotBG.sprite = isUnlocked ? slotUnlockedSprite : slotLockedSprite;

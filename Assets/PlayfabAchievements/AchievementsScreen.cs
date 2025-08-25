@@ -84,6 +84,7 @@ public class AchievementsScreen : MonoBehaviour
             var unlockedSet = new HashSet<string>(ov.unlocked ?? new List<string>());
             foreach (var def in ov.defs)
             {
+                
                 // if (ov.nextTarget.coins == def.coins)
                 // {
                 //     if (coinIcon)   coinIcon.sprite   = Resolve(def.sprite);

@@ -70,12 +70,23 @@ namespace PhoenixaStudio
 		}
 		public static void setSelectedLevel(string ID)
 		{
+			
 			PlayerPrefs.SetString("SelectedLevel", ID);
+		}
+		
+		public static string GetPlayerTitle()
+		{
+			return PlayerPrefs.GetString("playerTitle", "Rookie");
+		}
+		public static void SetPlayerTitle(string ID)
+		{
+			
+			PlayerPrefs.SetString("playerTitle", ID);
 		}
 
 		public static bool getGameRestart()
 		{
-			return PlayerPrefs.GetInt("restarted", 1)==1;
+			return PlayerPrefs.GetInt("restarted", 1) == 1;
 		}
 		public static void setGameRestart(int ID)
 		{
