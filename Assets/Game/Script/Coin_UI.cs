@@ -11,6 +11,7 @@ namespace PhoenixaStudio
 		void Update()
 		{
 			//show the text value
+			
 			coin.text = GlobalValue.Coin + "";
 		}
 	}
