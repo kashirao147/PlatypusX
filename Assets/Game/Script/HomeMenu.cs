@@ -22,6 +22,7 @@ namespace PhoenixaStudio
 
 		public void GotoPlay()
 		{
+			GlobalValue.setGameRestart(1);
 			SceneManager.LoadSceneAsync(GlobalValue.getSelectedLevel());
 		}
 	}

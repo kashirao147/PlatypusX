@@ -14,6 +14,8 @@ namespace PhoenixaStudio
 		public GameObject Gamepause;
 		public GameObject Shop;
 		public GameObject Level;
+		public GameObject FirstTimeLevelSelectWindow;
+		public GameObject FirstTimeLevelSelectButton;
 		public GameObject Achievements;
 		public GameObject FriendAndChallenge;
 		public GameObject Mission;
@@ -37,6 +39,10 @@ namespace PhoenixaStudio
 		// Use this for initialization
 		void Start()
 		{
+			if (!GlobalValue.getGameRestart())
+			{
+				FirstTimeLevelSelectButton.SetActive(false);
+			}
 			//Init the UI objects
 			UI.SetActive(false);
 			Controller.SetActive(false);
@@ -57,11 +63,14 @@ namespace PhoenixaStudio
 
 		public void Play()
 		{
+			GlobalValue.setGameRestart(0);
+			FirstTimeLevelSelectButton.SetActive(false);
 			//Trigger the play event
 			GameManager.Instance.Play();
 			UI.SetActive(true);
 			Controller.SetActive(true);
 			Coin.SetActive(true);
+			
 		}
 
 		//called by GameManager
@@ -96,6 +105,12 @@ namespace PhoenixaStudio
 		{
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
 			Shop.SetActive(true);
+		}
+		public void OpenFirstTimeLevelSelect()
+		{
+			FirstTimeLevelSelectButton.SetActive(false);
+			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundClick);
+			FirstTimeLevelSelectWindow.SetActive(true);
 		}
 		public void OpenAchievements()
 		{

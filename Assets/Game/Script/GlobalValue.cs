@@ -72,6 +72,15 @@ namespace PhoenixaStudio
 		{
 			PlayerPrefs.SetString("SelectedLevel", ID);
 		}
+
+		public static bool getGameRestart()
+		{
+			return PlayerPrefs.GetInt("restarted", 1)==1;
+		}
+		public static void setGameRestart(int ID)
+		{
+			PlayerPrefs.SetInt("restarted", 1);
+		}
 		
 
 		public static void UnlockCharacter(int ID)
