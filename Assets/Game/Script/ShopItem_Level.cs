@@ -55,6 +55,10 @@ namespace PhoenixaStudio
 
 		public void Unlock()
 		{
+            if (isUnlock)
+            {
+                return;
+            }
             
 			SoundManager.PlaySfx(soundManager.soundClick);
 
