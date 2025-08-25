@@ -22,7 +22,7 @@ namespace PhoenixaStudio
 
 		public void GotoPlay()
 		{
-			
+			GlobalValue.UnlockLevel("Level1");
 			GlobalValue.setGameRestart(1);
 			SceneManager.LoadSceneAsync(GlobalValue.getSelectedLevel());
 		}

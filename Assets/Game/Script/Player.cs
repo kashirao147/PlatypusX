@@ -94,9 +94,15 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-			if (SceneManager.GetActiveScene().name.ToLower().Contains("1"))
+			if (SceneManager.GetActiveScene().name.ToLower().Contains("2"))
 			{
 				isSnowLevel = true;
+				GetComponent<Rigidbody2D>().gravityScale = 5f;
+			}
+			else
+			{
+				GetComponent<Rigidbody2D>().gravityScale = 1.5f;
+				isSnowLevel = false;
 			}
 			//find the ShakeCamera object
 			SharkCamera = FindObjectOfType<ShakeCamera>();
@@ -206,7 +212,19 @@ namespace PhoenixaStudio
 		{
 			//init the time and gravity
 			timeBegin = Time.time;
-			rig.gravityScale =Gravity;
+			//rig.gravityScale =Gravity;
+			if (SceneManager.GetActiveScene().name.ToLower().Contains("2"))
+			{
+				isSnowLevel = true;
+				transform.GetChild(3).gameObject.SetActive(false);
+				GetComponent<Rigidbody2D>().gravityScale = 3.5f;
+			}
+			else
+			{
+				transform.GetChild(3).gameObject.SetActive(true);
+				GetComponent<Rigidbody2D>().gravityScale = 1.5f;
+				isSnowLevel = false;
+			}
 			rig.velocity = Vector2.zero;
 
 			GlobalValue.PlayGame++;
