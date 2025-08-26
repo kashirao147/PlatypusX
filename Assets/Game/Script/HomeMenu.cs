@@ -24,8 +24,8 @@ namespace PhoenixaStudio
 		{
 			GlobalValue.UnlockLevel("Level1");
 			GlobalValue.setGameRestart(1);
-			//SceneManager.LoadSceneAsync(GlobalValue.getSelectedLevel());
-			SceneManager.LoadSceneAsync("Level1");
+			SceneManager.LoadSceneAsync(GlobalValue.getSelectedLevel());
+			
 		}
 	}
 }
