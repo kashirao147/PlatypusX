@@ -25,6 +25,7 @@ namespace PhoenixaStudio
 		public AudioClip soundPowerUpShield;
 		public AudioClip soundExplosion;
 		public AudioClip SnowCoin;
+		public AudioClip CanonFire;
 
 		private AudioSource musicAudio;
 		private AudioSource soundFx;

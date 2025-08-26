@@ -7,6 +7,7 @@ namespace PhoenixaStudio
         [Header("Detection")]
         public float detectRadius = 6f;
         public LayerMask playerMask;
+        
 
         [Header("Shooting")]
         public Transform muzzle;                // empty child at cannon mouth
@@ -56,6 +57,7 @@ namespace PhoenixaStudio
             if (!projectilePrefab || !muzzle) return;
 
             // Spawn projectile
+            SoundManager.PlaySfx(GameManager.Instance.SoundManager.CanonFire);
             var go = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
             if (go.TryGetComponent<Rigidbody2D>(out var rb))
             {
