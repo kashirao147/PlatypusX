@@ -89,12 +89,13 @@ namespace PhoenixaStudio
 				Enemy.Hit(damage, true);
 
 				SoundManager.PlaySfx(soundExplosion);
+				WordParticlesScene.PlayRandomAt(transform.position);
 				if (ExplosionFX != null)
 					if (!SceneManager.GetActiveScene().name.ToLower().Contains("1"))
 					{
 						Instantiate(snowExplosion, other.gameObject.transform.position, Quaternion.identity);
 
-					 }
+					}
 					else
 					{
 
