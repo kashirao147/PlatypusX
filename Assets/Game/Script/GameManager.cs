@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 namespace PhoenixaStudio
 {
 	public class GameManager : MonoBehaviour
@@ -78,12 +79,14 @@ namespace PhoenixaStudio
 
 			Application.targetFrameRate = 60;
 		}
+		bool isFirstInstanciate=false;
 
 		void Start()
 		{
+			
 
             //spawn the level prefab
-            SpawnLevelBlock();
+			SpawnLevelBlock();
             //check and spawn the choosen submarine
             SetNewSubmarine();
 			//try to get the ads controller
@@ -163,7 +166,20 @@ namespace PhoenixaStudio
 					//if the game is waiting to start, spawn the dummy level
 					if (State == GameState.Menu)
 					{
-						Instantiate(levelEmpty);
+
+						if (!SceneManager.GetActiveScene().name.ToLower().Contains("1") && !isFirstInstanciate)
+						{
+
+							isFirstInstanciate = true;
+							GameObject g = Instantiate(levelEmpty);
+							g.transform.position = Vector3.zero;
+						}
+						else
+						{
+
+							Instantiate(levelEmpty);
+						}
+						
 						Speed = 5;
 					}
 					//if check the test level

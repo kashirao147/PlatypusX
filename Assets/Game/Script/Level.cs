@@ -12,6 +12,7 @@ namespace PhoenixaStudio
 
 		void Awake()
 		{
+			
 			//set the position
 			transform.position = new Vector3(spawnPosition, 0, 0);
 		}
