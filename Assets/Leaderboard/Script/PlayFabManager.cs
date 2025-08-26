@@ -4,6 +4,7 @@ using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine.UI;
+using PhoenixaStudio;
 
 public class PlayFabManager : MonoBehaviour
 {
@@ -68,7 +69,7 @@ public class PlayFabManager : MonoBehaviour
 
     public void OnSuccess(LoginResult result)
     {
-
+        GlobalValue.setMyPlayfabID(result.PlayFabId);
         isLogin = true;
         PlayFabAchievementService.ReportCoinsAndEvaluate(0,null);
        // On resume / after login

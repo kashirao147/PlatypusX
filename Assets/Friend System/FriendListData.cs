@@ -7,6 +7,7 @@ using PlayFab;
 using UnityEngine.UI;
 using TMPro;
 using Newtonsoft.Json;
+using PhoenixaStudio;
 
 public class FriendListData : MonoBehaviour
 {
@@ -16,16 +17,53 @@ public class FriendListData : MonoBehaviour
     [SerializeField] InputField playerid;
     [SerializeField] Transform ParrentTransformdisplayFriend;
     [SerializeField] GameObject FriendCardItem;
+    [SerializeField] Text PlayerID;
 
 
-  
 
-    
-    
-   
+    #region Copy to clipboard id
+      #if UNITY_IOS && !UNITY_EDITOR
+            [DllImport("__Internal")] private static extern void SetClipboardText(string str);
+        #endif
+
+            /// <summary>Copies current text from the assigned input field.</summary>
+            public void CopyFieldText()
+            {
+                string text = GetFieldText();
+                if (string.IsNullOrEmpty(text)) return;
+                Copy(text);
+            }
+
+            /// <summary>Copy any string programmatically.</summary>
+            public static void Copy(string text)
+            {
+                if (string.IsNullOrEmpty(text)) return;
+
+        #if UNITY_IOS && !UNITY_EDITOR
+                SetClipboardText(text);
+        #else
+                GUIUtility.systemCopyBuffer = text; // Android / PC / macOS / Editor
+        #endif
+            }
+
+            private string GetFieldText()
+            {
+                if (PlayerID != null)  return PlayerID.text;
+                
+                return "";
+            }
+
+
+    #endregion
+
+
+
+
+
 
     private void OnEnable()
     {
+        PlayerID.text = GlobalValue.getMyPlayfabID();
         getfriendlist();
     }
 

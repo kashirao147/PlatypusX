@@ -36,7 +36,7 @@ namespace PhoenixaStudio
                         break;
                     case MoveDirection.left:
                         transform.Translate(new Vector3(speed * Time.deltaTime *  -1 , 0), 0);
-                        iceBall.Rotate(0f, 0f, speed*20 * Time.deltaTime);
+                        if(iceBall) iceBall.Rotate(0f, 0f, speed*20 * Time.deltaTime);
                         break;
 
 

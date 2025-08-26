@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 namespace PhoenixaStudio
 {
 	public class Player : MonoBehaviour
 	{
 		[Header("Snow Level Settings")]
+		public ParticleSystem snowParticle;
 		public bool isSnowLevel = false;    // Enable snow movement mode
 		public float jumpForce = 10f;       // Jump impulse
 		private int jumpCount = 0;          // Track jumps
@@ -25,6 +27,7 @@ namespace PhoenixaStudio
 		public AudioClip soundDamage;
 		public AudioClip soundDestroy;
 		public GameObject destroyFX;
+		public GameObject SnowdESTROY;
 		[Header("Sound Engine")]
 		public AudioClip soundEngine;
 		[Range(0, 0.5f)]
@@ -94,7 +97,8 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-			if (SceneManager.GetActiveScene().name.ToLower().Contains("2"))
+			defendStrength =(int)(defendStrength*TitleMultiplier.Get());
+			if (!SceneManager.GetActiveScene().name.ToLower().Contains("1"))
 			{
 				isSnowLevel = true;
 				GetComponent<Rigidbody2D>().gravityScale = 5f;
@@ -213,7 +217,7 @@ namespace PhoenixaStudio
 			//init the time and gravity
 			timeBegin = Time.time;
 			//rig.gravityScale =Gravity;
-			if (SceneManager.GetActiveScene().name.ToLower().Contains("2"))
+			if (!SceneManager.GetActiveScene().name.ToLower().Contains("1"))
 			{
 				isSnowLevel = true;
 				transform.GetChild(3).gameObject.SetActive(false);
@@ -254,7 +258,7 @@ namespace PhoenixaStudio
 			}
 
 			var Enemy = other.GetComponent<Enemy>();
-			if (Enemy)
+			if (Enemy && !other.GetComponent<Coin>())
 			{
 				//Take damage
 				Damage(Enemy.damage);
@@ -291,7 +295,15 @@ namespace PhoenixaStudio
 				transform.Find("EngineFX").gameObject.SetActive(false);
 
 			GunSpawnPoint.transform.parent.gameObject.SetActive(false);
+			if (isSnowLevel)
+			{
+				Instantiate(SnowdESTROY, transform.position, Quaternion.identity);
+			}
+			else
+			{
+				
 			Instantiate(destroyFX, transform.position, Quaternion.identity);
+			}
 			gameObject.SetActive(false);
 		}
 
@@ -570,10 +582,12 @@ namespace PhoenixaStudio
 			// Detect walk animation trigger
 			if (isGrounded)
 			{
+				
 				playerAnimator.SetBool("isWalking", true); // Play walk animation
 			}
 			else
 			{
+				
 				playerAnimator.SetBool("isWalking", false); // Idle
 			}
  
@@ -585,6 +599,10 @@ namespace PhoenixaStudio
 		{
 			if (jumpCount < 2)
 			{
+				if (isSnowLevel)
+				{
+					if(snowParticle)snowParticle.Stop();
+				}
 				rig.velocity = new Vector2(0, 0); // Reset vertical velocity
 				rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 				jumpCount++;
@@ -597,6 +615,10 @@ namespace PhoenixaStudio
 		{
 			if (isSnowLevel && collision.gameObject.CompareTag("Ground"))
 			{
+				if (isSnowLevel)
+				{
+					if(snowParticle)snowParticle.Play();
+				}
 				isGrounded = true;
 				jumpCount = 0;
 			}

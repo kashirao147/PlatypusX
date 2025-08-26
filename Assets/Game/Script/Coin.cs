@@ -4,6 +4,7 @@ namespace PhoenixaStudio
 {
 	public class Coin : MonoBehaviour
 	{
+		public bool isSnowCoin = false;
 		//the effect that will be shown when collected the coin
 		public GameObject CollectedEffect;
 		public GameObject SparkEffect;
@@ -16,6 +17,11 @@ namespace PhoenixaStudio
 			if (SparkEffect != null)
 				Instantiate(SparkEffect, transform.position, Quaternion.identity);
 			//play sound
+			if (isSnowCoin)
+			{
+			SoundManager.PlaySfx(GameManager.Instance.SoundManager.SnowCoin);	
+			}
+			else
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundCollectCoin);
 			//destroy the coin after collected
 			Destroy(gameObject);

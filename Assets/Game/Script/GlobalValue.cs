@@ -73,6 +73,16 @@ namespace PhoenixaStudio
 			
 			PlayerPrefs.SetString("SelectedLevel", ID);
 		}
+
+		public static string getMyPlayfabID()
+		{
+			return PlayerPrefs.GetString("PlayfabID", "");
+		}
+		public static void setMyPlayfabID(string ID)
+		{
+			
+			PlayerPrefs.SetString("PlayfabID", ID);
+		}
 		
 		public static string GetPlayerTitle()
 		{

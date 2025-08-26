@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 namespace PhoenixaStudio
 {
 	public class Rocket : MonoBehaviour
@@ -21,6 +23,8 @@ namespace PhoenixaStudio
 
 		public GameObject ExplosionFX;
 		public AudioClip soundExplosion;
+		public GameObject snowExplosion;
+		public AudioClip SnowsoundExplosion;
 
 		bool isDetect;
 		Transform target;
@@ -86,7 +90,16 @@ namespace PhoenixaStudio
 
 				SoundManager.PlaySfx(soundExplosion);
 				if (ExplosionFX != null)
-					Instantiate(ExplosionFX, other.gameObject.transform.position, Quaternion.identity);
+					if (!SceneManager.GetActiveScene().name.ToLower().Contains("1"))
+					{
+						Instantiate(snowExplosion, other.gameObject.transform.position, Quaternion.identity);
+
+					 }
+					else
+					{
+
+						Instantiate(ExplosionFX, other.gameObject.transform.position, Quaternion.identity);
+					}
 				Hide();
 			}
 		}
