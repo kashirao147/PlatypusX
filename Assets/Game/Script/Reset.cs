@@ -10,7 +10,9 @@ namespace PhoenixaStudio
 		{
 			//Delete all saved data
 			PlayerPrefs.DeleteAll();
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			GlobalValue.UnlockLevel("Level1");
+			GlobalValue.setGameRestart(1);
+			SceneManager.LoadScene(GlobalValue.getSelectedLevel());
 		}
 	}
 }

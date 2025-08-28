@@ -613,21 +613,27 @@ namespace PhoenixaStudio
 	
 	private void OnCollisionEnter2D(Collision2D collision)
 		{
-			if (isSnowLevel && collision.gameObject.CompareTag("Ground"))
+			if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
 			{
 				if (isSnowLevel)
 				{
-					if(snowParticle)snowParticle.Play();
+					if (snowParticle) snowParticle.Play();
 				}
+
 				isGrounded = true;
 				jumpCount = 0;
+				if (collision.gameObject.CompareTag("Platform"))
+				{
+					jumpCount = 1;
+				}
 			}
 		}
 
 private void OnCollisionExit2D(Collision2D collision)
 {
-    if (isSnowLevel && collision.gameObject.CompareTag("Ground"))
+    if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
     {
+		
         isGrounded = false;
     }
 }
