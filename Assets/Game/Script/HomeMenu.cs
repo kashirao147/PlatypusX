@@ -24,6 +24,7 @@ namespace PhoenixaStudio
 		{
 			GlobalValue.UnlockLevel("Level1");
 			GlobalValue.setGameRestart(1);
+			GlobalValue.setCanShowNamePannel(1);
 			SceneManager.LoadSceneAsync(GlobalValue.getSelectedLevel());
 			
 		}

@@ -102,6 +102,15 @@ namespace PhoenixaStudio
 		{
 			PlayerPrefs.SetInt("restarted", 1);
 		}
+
+		public static bool getCanShowNamePannel()
+		{
+			return PlayerPrefs.GetInt("CanShowNamePannel", 1) == 1;
+		}
+		public static void setCanShowNamePannel(int ID)
+		{
+			PlayerPrefs.SetInt("CanShowNamePannel", ID);
+		}
 		
 
 		public static void UnlockCharacter(int ID)

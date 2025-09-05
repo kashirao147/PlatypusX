@@ -160,7 +160,13 @@ public class PlayFabManager : MonoBehaviour
         if (result.InfoResultPayload.PlayerProfile != null)
         name = result.InfoResultPayload.PlayerProfile.DisplayName;
         if (name == null)
-            NameWindow.SetActive(true);
+        {
+            if (GlobalValue.getCanShowNamePannel())
+            {
+                GlobalValue.setCanShowNamePannel(0);
+                NameWindow.SetActive(true);
+            }
+        }
         PlayerPrefs.SetString("NameLB", name);
 
     }
@@ -173,6 +179,12 @@ public class PlayFabManager : MonoBehaviour
 
     public void submitName()
     {
+        string name=nameInput.text;
+        if (nameInput.text == "" || string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+        {
+            MessagePopup.ShowPopup("Please Enter Name!");
+            return;
+        }
         var request = new UpdateUserTitleDisplayNameRequest
         {
             DisplayName = nameInput.text
