@@ -14,7 +14,7 @@ namespace PhoenixaStudio
 		private bool isGrounded = false;    // Check if grounded
 		public Animator playerAnimator;     // Animator for walking/jumping animations
 		private float fixedX;
-		public float Gravity=1.5f;            // Store X position so player never moves on X
+		public float Gravity = 1.5f;            // Store X position so player never moves on X
 
 		[Header("Setup Submarine")]
 		[Range(0, 100)]
@@ -97,7 +97,7 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-			defendStrength =(int)(defendStrength*TitleMultiplier.Get());
+			defendStrength = (int)(defendStrength * TitleMultiplier.Get());
 			if (!SceneManager.GetActiveScene().name.ToLower().Contains("1"))
 			{
 				isSnowLevel = true;
@@ -105,7 +105,8 @@ namespace PhoenixaStudio
 			}
 			else
 			{
-				GetComponent<Rigidbody2D>().gravityScale = 1.5f;
+				GetComponent<Rigidbody2D>().gravityScale = 0;
+				//GetComponent<Rigidbody2D>().gravityScale = 1.5f;
 				isSnowLevel = false;
 			}
 			//find the ShakeCamera object
@@ -143,24 +144,29 @@ namespace PhoenixaStudio
 		{
 
 			if (GameManager.Instance.State != GameManager.GameState.Playing)
-        	return;
+				return;
 
 			if (isSnowLevel)
 			{
 				HandleSnowLevelMovement();
-				//return; // Skip submarine controls
+				// NOTE: drag control is only for non-snow levels
 			}
+
 			if (GameManager.Instance.State != GameManager.GameState.Playing)
 				return;
 
-			//calculating the firing time
 			timeToFire += Time.deltaTime;
 			timeToFireBullet += Time.deltaTime;
-			//Check input
-			HandleInput();
-			//Rotating the player base on the velocity
-			transform.rotation = Quaternion.Euler(0, 0, Mathf.Clamp(rig.velocity.y * rotationSpeed, -rotationMaxAngle, rotationMaxAngle));
 
+			HandleInput();
+
+			// <<< NEW: handle drag lift for non-snow levels >>>
+			if (!isSnowLevel && !isSpeedBoosted)
+				HandleDragLiftInput();
+
+			transform.rotation = Quaternion.Euler(
+				0, 0, Mathf.Clamp(rig.velocity.y * rotationSpeed, -rotationMaxAngle, rotationMaxAngle)
+			);
 			//Shield
 			if (!isUsingShield)
 				shieldEnegry = Mathf.Clamp((Time.time - timeBegin) * 100 / timeRecharge, 0, 100);
@@ -184,6 +190,92 @@ namespace PhoenixaStudio
 				soundEngineFX.volume = GlobalValue.isSound ? Mathf.Lerp(soundEngineFX.volume, volumeOff, 0.2f) : 0;
 			}
 		}
+
+		void FixedUpdate()
+		{
+			if (!isSnowLevel)
+			{
+				if (dragHasPendingTarget)
+				{
+					float newVy = Mathf.MoveTowards(rig.velocity.y, dragTargetVy, dragVerticalAccel * Time.fixedDeltaTime);
+					rig.velocity = new Vector2(rig.velocity.x, newVy);
+					dragHasPendingTarget = false;
+				}
+				else if (_releaseDampenActive)
+				{
+					float newVy = Mathf.MoveTowards(rig.velocity.y, 0f, releaseDampen * Time.fixedDeltaTime);
+					rig.velocity = new Vector2(rig.velocity.x, newVy);
+					if (Mathf.Abs(newVy) < 0.01f) _releaseDampenActive = false;
+				}
+			}
+		}
+
+
+		void HandleDragLiftInput()
+		{
+			// TOUCH
+			if (Input.touchCount > 0)
+			{
+				Touch t = Input.GetTouch(0);
+
+				if (t.phase == TouchPhase.Began)
+				{
+					dragActive = true;
+					dragPrevScreenPos = t.position;
+				}
+				else if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary)
+				{
+					ApplyDragDelta(t.position);
+				}
+				else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled)
+				{
+					 StopVerticalImmediately();
+					// dragActive = false;      // release -> stop setting target; gravity handles fall
+					// dragHasPendingTarget = false;
+				}
+				return; // prefer touch when present
+			}
+
+			// MOUSE (editor/testing)
+			if (Input.GetMouseButtonDown(0))
+			{
+				dragActive = true;
+				dragPrevScreenPos = Input.mousePosition;
+			}
+			else if (Input.GetMouseButton(0))
+			{
+				ApplyDragDelta((Vector2)Input.mousePosition);
+			}
+			else if (Input.GetMouseButtonUp(0))
+			{
+				 StopVerticalImmediately();
+			}
+		}
+
+		void ApplyDragDelta(Vector2 currentScreenPos)
+		{
+			if (!dragActive) return;
+
+			float dyPixels = currentScreenPos.y - dragPrevScreenPos.y;
+
+			// dead-zone filter
+			if (Mathf.Abs(dyPixels) < dragDeadZonePixels) dyPixels = 0f;
+
+			// pixels -> desired vertical speed
+			float desiredVy = dyPixels * dragSpeedPerPixel;
+			desiredVy = Mathf.Clamp(desiredVy, dragMaxDownSpeed, dragMaxUpSpeed);
+
+			dragTargetVy = desiredVy;
+			dragHasPendingTarget = true;
+
+			// advance for incremental deltas
+			dragPrevScreenPos = currentScreenPos;
+
+			// audio feedback like engine “on” when dragging upward
+			isUseEngine = desiredVy > 0.01f;
+		}
+
+
 
 		//Check keyboard input
 		private void HandleInput()
@@ -214,9 +306,8 @@ namespace PhoenixaStudio
 
 		public void Play()
 		{
-			//init the time and gravity
 			timeBegin = Time.time;
-			//rig.gravityScale =Gravity;
+
 			if (!SceneManager.GetActiveScene().name.ToLower().Contains("1"))
 			{
 				isSnowLevel = true;
@@ -226,13 +317,15 @@ namespace PhoenixaStudio
 			else
 			{
 				transform.GetChild(3).gameObject.SetActive(true);
-				GetComponent<Rigidbody2D>().gravityScale = 1.5f;
 				isSnowLevel = false;
+				// Make sure non-snow uses your chosen gravity so release makes it fall
+				GetComponent<Rigidbody2D>().gravityScale = 0;
 			}
-			rig.velocity = Vector2.zero;
 
+			rig.velocity = Vector2.zero;
 			GlobalValue.PlayGame++;
 		}
+
 
 		void OnTriggerStay2D(Collider2D other)
 		{
@@ -301,8 +394,8 @@ namespace PhoenixaStudio
 			}
 			else
 			{
-				
-			Instantiate(destroyFX, transform.position, Quaternion.identity);
+
+				Instantiate(destroyFX, transform.position, Quaternion.identity);
 			}
 			gameObject.SetActive(false);
 		}
@@ -582,17 +675,17 @@ namespace PhoenixaStudio
 			// Detect walk animation trigger
 			if (isGrounded)
 			{
-				
+
 				playerAnimator.SetBool("isWalking", true); // Play walk animation
 			}
 			else
 			{
-				
+
 				playerAnimator.SetBool("isWalking", false); // Idle
 			}
- 
+
 			// Jumping
-			
+
 		}
 
 		public void JumpSnowLevel()
@@ -601,7 +694,7 @@ namespace PhoenixaStudio
 			{
 				if (isSnowLevel)
 				{
-					if(snowParticle)snowParticle.Stop();
+					if (snowParticle) snowParticle.Stop();
 				}
 				rig.velocity = new Vector2(0, 0); // Reset vertical velocity
 				rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -610,8 +703,8 @@ namespace PhoenixaStudio
 				playerAnimator.SetTrigger("Jump");
 			}
 		}
-	
-	private void OnCollisionEnter2D(Collision2D collision)
+
+		private void OnCollisionEnter2D(Collision2D collision)
 		{
 			if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
 			{
@@ -629,17 +722,85 @@ namespace PhoenixaStudio
 			}
 		}
 
-private void OnCollisionExit2D(Collision2D collision)
-{
-    if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
-    {
-		
-        isGrounded = false;
-    }
+		private void OnCollisionExit2D(Collision2D collision)
+		{
+			if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
+			{
+
+				isGrounded = false;
+			}
+		}
+
+
+
+		#endregion
+
+
+
+
+
+		#region New movement system
+
+		// --- Drag Lift (non-snow levels) ---
+		[Header("Drag Lift")]
+		[Tooltip("How much vertical speed per screen pixel of drag.")]
+		public float dragSpeedPerPixel = 0.025f;
+
+		[Tooltip("Max upward speed while dragging up.")]
+		public float dragMaxUpSpeed = 10f;
+
+		[Tooltip("Max downward speed while dragging down.")]
+		public float dragMaxDownSpeed = -10f;
+
+		[Tooltip("How fast to approach target vertical speed.")]
+		public float dragVerticalAccel = 40f;
+
+		[Tooltip("Ignore tiny finger jitter (in pixels).")]
+		public float dragDeadZonePixels = 2f;
+
+		bool dragActive;
+		Vector2 dragPrevScreenPos;
+		float dragTargetVy;
+		bool dragHasPendingTarget;
+
+
+
+		// Drag Lift tuning (add near your other Drag fields)
+		[Tooltip("If true, zero vertical speed immediately when finger is released.")]
+		public bool instantStopOnRelease = true;
+
+		[Tooltip("If not instant, how fast we brake Y speed on release (units/sec).")]
+		public float releaseDampen = 60f;
+
+		bool _releaseDampenActive = false;
+
+
+		void StopVerticalImmediately()
+		{
+			isUseEngine = false;
+			dragActive = false;
+			dragHasPendingTarget = false;
+			dragTargetVy = 0f;
+
+			if (instantStopOnRelease)
+			{
+				// kill vertical speed now; gravity will take over next step
+				rig.velocity = new Vector2(rig.velocity.x, 0f);
+				_releaseDampenActive = false;
+			}
+			else
+			{
+				// enable braking toward zero over a few frames
+				_releaseDampenActive = true;
+			}
 }
 
 
-			
+		
+
+
+
+		
 	#endregion
 
 

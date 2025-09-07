@@ -17,7 +17,7 @@ namespace PhoenixaStudio
 		{
 			//move the player up
 			if (isMoveUp)
-				GameManager.Instance.Player.MoveUp();
+				//GameManager.Instance.Player.MoveUp();
 			//Fire the bullet
 			if (isFire)
 				GameManager.Instance.Player.FireBullet();
