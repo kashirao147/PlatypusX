@@ -16,11 +16,14 @@ namespace PhoenixaStudio
 		void Update()
 		{
 			//move the player up
-			if (isMoveUp)
+			//if (isMoveUp)
 				//GameManager.Instance.Player.MoveUp();
-			//Fire the bullet
-			if (isFire)
-				GameManager.Instance.Player.FireBullet();
+				//Fire the bullet
+				if (isFire)
+				{
+					Debug.Log("Is Firing ");
+					GameManager.Instance.Player.FireBullet();
+				}
 			if (GameManager.Instance.Player.shieldEnegry >= 100 || !GameManager.Instance.Player.isUsingShield )
 			{
 				Shield.transform.parent.GetChild(1).gameObject.SetActive(true);
@@ -67,10 +70,12 @@ namespace PhoenixaStudio
 
 		public void FireGun()
 		{
+			Debug.Log("Fire");
 			isFire = true;
 		}
 		public void FireGunOff()
 		{
+			Debug.Log("Fire stop");
 			isFire = false;
 		}
 	}

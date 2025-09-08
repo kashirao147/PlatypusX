@@ -434,6 +434,7 @@ namespace PhoenixaStudio
 
 		public void FireBullet()
 		{
+			Debug.Log($"Fire bullet {timeToFireBullet < fireBulletRate}");
 			//Fire Gun 
 			if (timeToFireBullet < fireBulletRate)
 				return;
