@@ -531,6 +531,7 @@ namespace PhoenixaStudio
 		{
 			// Phase 1: Gradually increase speed to double over 1 second
 			float elapsedTime = 0f;
+			GameManager.Instance.Speedlines.gameObject.SetActive(true);
 
 			while (elapsedTime < speedBoostRampUpTime)
 			{
@@ -582,6 +583,7 @@ namespace PhoenixaStudio
 
 				yield return null;
 			}
+			GameManager.Instance.Speedlines.gameObject.SetActive(false);
 
 			// Ensure we're back to original speed
 			GameManager.Instance.Speed = originalSpeed;
@@ -635,6 +637,7 @@ namespace PhoenixaStudio
 			// Ensure we're back to original speed
 			GameManager.Instance.Speed = originalSpeed;
 			isSpeedBoosted = false;
+			GameManager.Instance.Speedlines.gameObject.SetActive(false);
 			isSpeedBoostInvincible = false; // Disable invincibility
 			currentSpeedBoostCoroutine = null; // Clear the coroutine reference
 

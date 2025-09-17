@@ -19,6 +19,7 @@ namespace PhoenixaStudio
 
 		public enum GameState { Menu, Playing, Pause, GameOver }
         public PlayFabManager playfab;
+		public GameObject Speedlines;
 		public GameState State { get; set; }
 		[Header("=== TEST LEVEL ===")]
 		public bool spawnTestLevel = false;
