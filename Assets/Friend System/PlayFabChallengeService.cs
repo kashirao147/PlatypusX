@@ -183,7 +183,7 @@ public static class PlayFabChallengeService
         string targetPlayFabId,
         Action<ActionResult> done,
         Action<PlayFabError> fail = null,
-        int? testMinutes = 1)                // <— NEW
+        int? testMinutes = 10)                // <— NEW
     {
         var fp = new Dictionary<string, object> {
             { "TargetPlayFabId", targetPlayFabId },

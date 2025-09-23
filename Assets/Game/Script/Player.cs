@@ -719,6 +719,7 @@ namespace PhoenixaStudio
 				}
 
 				isGrounded = true;
+				SoundManager.PlaySfx(GameManager.Instance.SoundManager.landed);	
 				jumpCount = 0;
 				if (collision.gameObject.CompareTag("Platform"))
 				{
@@ -731,7 +732,7 @@ namespace PhoenixaStudio
 		{
 			if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
 			{
-
+				
 				isGrounded = false;
 			}
 		}
