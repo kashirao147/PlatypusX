@@ -696,6 +696,7 @@ namespace PhoenixaStudio
 		{
 			if (jumpCount < 2)
 			{
+				SoundManager.PlaySfx(GameManager.Instance.SoundManager.jump);	
 				if (isSnowLevel)
 				{
 					if (snowParticle) snowParticle.Stop();
