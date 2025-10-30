@@ -1,8 +1,7 @@
-using System;
-using PhoenixaStudio;
-using PlayFab.PfEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using PhoenixaStudio; // for animations
 
 public class DistanceProgressBar : MonoBehaviour
 {
@@ -11,6 +10,11 @@ public class DistanceProgressBar : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Text targetText;
+
+    [Header("Reward FX")]
+    [SerializeField] private AudioSource bonusSound;
+    [SerializeField] private ParticleSystem bonusParticle;
+    [SerializeField] private Text bonusText; // e.g. “+100 Coins”
 
     private float targetDistance;
     private float distanceCovered;
@@ -29,14 +33,14 @@ public class DistanceProgressBar : MonoBehaviour
         if (progressSlider != null)
             progressSlider.interactable = false;
 
-        gameObject.SetActive(false); // Hide initially
+        gameObject.SetActive(false); // Hidden by default
+        if (bonusText != null)
+            bonusText.gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Initializes and activates the progress bar.
-    /// </summary>
     public void SetTarget(float distance)
     {
+       
         if (progressSlider == null || targetText == null)
         {
             Debug.LogWarning("Progress bar setup missing references!");
@@ -58,20 +62,13 @@ public class DistanceProgressBar : MonoBehaviour
 
     private void Update()
     {
-        if (!isActive)
-            return;
-
-        // Get background speed from GameManager
-        if (GameManager.Instance == null)
+        if (!isActive || GameManager.Instance == null)
             return;
 
         float speed = GameManager.Instance.Speed;
-
-        // Increase distance based on speed * deltaTime
         distanceCovered += speed * Time.deltaTime;
         distanceCovered = Mathf.Clamp(distanceCovered, 0f, targetDistance);
 
-        // Update progress bar and text
         progressSlider.value = distanceCovered;
         targetText.text = $"Progress: {distanceCovered:0} / {targetDistance:0} m";
 
@@ -81,27 +78,72 @@ public class DistanceProgressBar : MonoBehaviour
 
     private void OnTargetAchieved()
     {
+        if (!isActive) return;
+
+        isActive = false;
         Debug.Log("🎯 Target achieved!");
-        ResetProgress();
+        progressSlider.value = progressSlider.maxValue;
+
+        // Play bonus effects
+        PlayBonusEffects();
+
+        // Reset progress bar after short delay
+        DOVirtual.DelayedCall(2.5f, () =>
+        {
+            ResetProgress();
+            SetTarget(targetDistance + 100);
+        });
     }
 
-    /// <summary>
-    /// Resets the progress and hides the bar.
-    /// </summary>
+    private void PlayBonusEffects()
+    {
+        // 🔊 Play sound
+        if (bonusSound != null)
+            bonusSound.Play();
+
+        // 💥 Play particles
+        if (bonusParticle != null)
+            bonusParticle.Play();
+        FindFirstObjectByType<ShakeCamera>().DoShake();
+        // 💰 Show “+100 Coins” animation
+        if (bonusText != null)
+        {
+            bonusText.text = "+"+targetDistance+" Coins";
+            bonusText.gameObject.SetActive(true);
+           // bonusText.color = new Color(1, 1, 0, 0); // yellow and transparent
+
+            // Fade in + move up animation
+            //bonusText.DOFade(1, 0.3f);
+            bonusText.rectTransform.DOScale(1.3f, 0.3f).SetEase(Ease.OutBack);
+            bonusText.rectTransform.DOLocalMoveY(bonusText.rectTransform.position.y + 100f, 2f)
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() =>
+                {
+           
+                    bonusText.gameObject.SetActive(false);
+                    //bonusText.DOFade(0, 1f).OnComplete(() => );
+                    bonusText.rectTransform.localScale = Vector3.one*4;
+                });
+        }
+
+        // 🪙 Increment coins using DOTween
+        int startCoins = GlobalValue.Coin;
+        int targetCoins = startCoins + 100;
+        DOVirtual.Int(startCoins, targetCoins, 2f, (value) =>
+        {
+            GlobalValue.Coin = value;
+            // Optionally update your coin UI text here if you have one:
+            // coinText.text = GlobalValue.Coin.ToString();
+        });
+    }
+
     public void ResetProgress()
     {
-        isActive = false;
         progressSlider.value = 0f;
         targetText.text = "Target Achieved!";
         gameObject.SetActive(false);
-
-        // Optionally, you can auto-set the next target here, e.g.:
-         SetTarget(targetDistance + 100f);
     }
 
-    /// <summary>
-    /// Manually enable or disable the progress bar.
-    /// </summary>
     public void SetActive(bool state)
     {
         progressSlider.gameObject.SetActive(state);

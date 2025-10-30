@@ -16,7 +16,7 @@ namespace PhoenixaStudio
 
 
 		public static GameManager Instance;
-
+		public float InitialTargetOfProgress=100;
 		public enum GameState { Menu, Playing, Pause, GameOver }
         public PlayFabManager playfab;
 		public GameObject Speedlines;

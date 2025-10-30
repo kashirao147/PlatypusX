@@ -306,7 +306,7 @@ namespace PhoenixaStudio
 
 		public void Play()
 		{
-			DistanceProgressBar.Instance.SetTarget( 100);
+			DistanceProgressBar.Instance.SetTarget( GameManager.Instance.InitialTargetOfProgress);
 			DistanceProgressBar.Instance.SetActive(true);
 			timeBegin = Time.time;
 
