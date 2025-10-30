@@ -14,7 +14,7 @@ public class HandControlSwitcher : MonoBehaviour
     {
         
         // Load preference from PlayerPrefs
-        string savedHand = PlayerPrefs.GetString(HandPreferenceKey, "Left"); // Default to Right
+        string savedHand = PlayerPrefs.GetString(HandPreferenceKey, "Right"); // Default to Right
 
         if (savedHand == "Left")
         {
