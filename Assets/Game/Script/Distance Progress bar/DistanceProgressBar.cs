@@ -13,7 +13,7 @@ public class DistanceProgressBar : MonoBehaviour
 
     [Header("Reward FX")]
     [SerializeField] private AudioSource bonusSound;
-    [SerializeField] private ParticleSystem bonusParticle;
+    [SerializeField] public ParticleSystem bonusParticle;
     [SerializeField] private Text bonusText; // e.g. “+100 Coins”
 
     private float targetDistance;
