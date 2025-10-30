@@ -14,6 +14,7 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
+			DistanceProgressBar.Instance.SetActive(false);
 			if (FindFirstObjectByType<PlayFabManager>().isLogin)
 			{
 				if (GlobalEventService.GetCachedBody() != null && GlobalEventService.GetCachedBody() != "" && GlobalEventService.GetCachedTitle() != "")
