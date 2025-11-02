@@ -1,81 +1,127 @@
-using PhoenixaStudio;
 using UnityEngine;
+using System.Collections.Generic;
+using PhoenixaStudio;
 
 public class DestroyAllCollectible : MonoBehaviour
 {
-    [Header("Movement Settings")]
+    [Header("Movement")]
     public float speed = 5f;
 
-    [Header("Effect Settings")]
-    public AudioSource pickupSound;
-    public ParticleSystem pickupEffect;
+    [Header("Missile Settings")]
+    [Tooltip("Missile prefab (should contain MissileProjectile component).")]
+    public GameObject missilePrefab;
+    public int missileCount = 12;
+    public float spawnRadius = 0.5f; // spawn offset from collectible center
+    public float missileSpeed = 8f;
 
-    [Header("Destroy Radius")]
-    public float destroyRadius = 10f;
-    public LayerMask enemyLayer; // set this to "Enemy" layer in inspector for optimization
+    [Header("Targeting")]
+    public float enemySearchRadius = 50f; // how far to look for enemies
+    public LayerMask enemyLayer; // set to Enemy layer in inspector
+
+    [Header("Effects")]
+    public ParticleSystem pickupEffect;
+    public AudioSource pickupSound;
 
     private bool isCollected = false;
 
-    void Start()
-    {
-        pickupEffect = GameManager.Instance.DestroyAllParticle;
-    }
     private void Update()
     {
-        // Move left only when the game is in Playing state
+        // Move only while playing
         if (GameManager.Instance != null && GameManager.Instance.State == GameManager.GameState.Playing)
         {
-            transform.Translate(speed * Time.deltaTime * -1, 0, 0);
+            transform.Translate(-speed * Time.deltaTime, 0f, 0f);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (isCollected) return;
-        string n = other.gameObject.name.ToLower();
-        if (n.Contains("submarine"))
+       string n = other.gameObject.name.ToLower();
+        if (!n.Contains("submarine")) return;
+
+        isCollected = true;
+
+        // play FX
+        if (pickupSound != null) pickupSound.Play();
+        if (pickupEffect != null) pickupEffect.Play();
+
+        // Launch missiles
+        LaunchMissiles();
+
+        // disable visuals & collider
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr != null) sr.enabled = false;
+        var col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        // destroy collectible after effects
+        Destroy(gameObject, 2f);
+    }
+
+    private void LaunchMissiles()
+    {
+        // Gather available enemies within search radius
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, enemySearchRadius, enemyLayer);
+        List<Enemy> enemies = new List<Enemy>();
+        foreach (var h in hits)
         {
-            isCollected = true;
+            var e = h.GetComponent<Enemy>();
+            if (e != null) enemies.Add(e);
+        }
 
-            // Play effects
-            if (pickupSound != null) pickupSound.Play();
-            if (pickupEffect != null) pickupEffect.Play();
+        // Determine targets for missiles: try to assign one unique enemy per missile if possible
+        List<Enemy> assignedTargets = new List<Enemy>();
+        int enemyCount = enemies.Count;
 
-            // Destroy enemies nearby
-            DestroyEnemiesInRadius();
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Transform target = null;
 
-            // Disable visuals & collider
-            GetComponent<SpriteRenderer>().enabled = false;
-            GetComponent<Collider2D>().enabled = false;
+            if (enemyCount > 0)
+            {
+                // assign enemy in round-robin to spread missiles across enemies
+                Enemy chosen = enemies[i % enemyCount];
+                assignedTargets.Add(chosen);
+                target = chosen.transform;
+            }
 
-            // Destroy after short delay
-            Destroy(gameObject, 1.5f);
+            // spawn position slightly offset so missiles don't overlap exactly
+            float angle = (360f / missileCount) * i;
+            Vector3 spawnPos = transform.position + (Vector3)(Quaternion.Euler(0, 0, angle) * Vector2.right) * spawnRadius;
+
+            SpawnMissile(spawnPos, target);
         }
     }
 
-    private void DestroyEnemiesInRadius()
+    private void SpawnMissile(Vector3 spawnPos, Transform target)
     {
-        // Get all colliders within radius on the given layer
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, destroyRadius, enemyLayer);
-
-        int count = 0;
-        foreach (var hit in hits)
+        if (missilePrefab == null)
         {
-            var enemy = hit.GetComponent<Enemy>();
-            if (enemy != null)
+            Debug.LogWarning("Missile prefab not assigned!");
+            return;
+        }
+
+        var go = Instantiate(missilePrefab, spawnPos, Quaternion.identity);
+        var missile = go.GetComponent<MissileProjectile>();
+        if (missile != null)
+        {
+            missile.Initialize(target, missileSpeed, enemyLayer);
+        }
+        else
+        {
+            // If prefab doesn't have the script, still try to set velocity
+            var rb = go.GetComponent<Rigidbody2D>();
+            if (rb != null)
             {
-                enemy.Hit(10000, true);
-                count++;
+                rb.velocity = Vector2.right * missileSpeed;
             }
         }
-
-        Debug.Log($"💥 Destroyed {count} enemies within {destroyRadius} units!");
     }
 
-    // To visualize the radius in editor
+    // Editor gizmo to show search radius
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = new Color(1f, 0.3f, 0.1f, 0.5f);
-        Gizmos.DrawWireSphere(transform.position, destroyRadius);
+        Gizmos.color = new Color(1f, 0.2f, 0.1f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, enemySearchRadius);
     }
 }
