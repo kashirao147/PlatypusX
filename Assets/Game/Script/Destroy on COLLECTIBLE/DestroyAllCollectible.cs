@@ -18,7 +18,7 @@ public class DestroyAllCollectible : MonoBehaviour
 
     void Start()
     {
-        pickupEffect = DistanceProgressBar.Instance.bonusParticle;
+        pickupEffect = GameManager.Instance.DestroyAllParticle;
     }
     private void Update()
     {
