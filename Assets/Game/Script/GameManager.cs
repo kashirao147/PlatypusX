@@ -20,6 +20,7 @@ namespace PhoenixaStudio
 		public ParticleSystem DestroyAllParticle;
 		public ParticleSystem CoinBoxCollectParticle;
 		public ParticleSystem GreatJobParticle;
+		public ParticleSystem CoinMasterParticle;
 		public bool CanShowBOMBorCoinboxgift=false;
 		public enum GameState { Menu, Playing, Pause, GameOver }
         public PlayFabManager playfab;

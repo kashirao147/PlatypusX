@@ -359,7 +359,7 @@ namespace PhoenixaStudio
 				// Check if reached goal within window
 				if (coinsCollectedInWindow >= COIN_TARGET)
 				{
-					GameManager.Instance.GreatJobParticle.Play();
+					GameManager.Instance.CoinMasterParticle.Play();
 
 					// Reset after effect
 					coinsCollectedInWindow = 0;
