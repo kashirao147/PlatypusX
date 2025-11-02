@@ -110,6 +110,7 @@ public class DistanceProgressBar : MonoBehaviour
         if (bonusParticle != null)
             bonusParticle.Play();
         FindFirstObjectByType<ShakeCamera>().DoShake();
+        FindAnyObjectByType<SmoothSlidingBackground>().SlideToNextBackground();
         // 💰 Show “+100 Coins” animation
         if (bonusText != null)
         {
