@@ -20,6 +20,20 @@ public class CoinBoxCollectible : MonoBehaviour
 
     private void Awake()
     {
+       if (GameManager.Instance.CanShowBOMBorCoinboxgift)
+        {
+
+          
+                GlobalTimer.SetTime(Random.Range(15, 30));
+                GlobalTimer.StartTimer(GlobalTimer.TimerType.Unscaled);
+            GameManager.Instance.CanShowBOMBorCoinboxgift = false;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            
+        }
+        
         spriteRenderer = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
         pickupEffect = GameManager.Instance.CoinBoxCollectParticle;

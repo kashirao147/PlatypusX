@@ -19,6 +19,7 @@ namespace PhoenixaStudio
 		public float InitialTargetOfProgress = 100;
 		public ParticleSystem DestroyAllParticle;
 		public ParticleSystem CoinBoxCollectParticle;
+		public bool CanShowBOMBorCoinboxgift=false;
 		public enum GameState { Menu, Playing, Pause, GameOver }
         public PlayFabManager playfab;
 		public GameObject Speedlines;
@@ -86,21 +87,27 @@ namespace PhoenixaStudio
 
 		void Start()
 		{
-			
 
-            //spawn the level prefab
+
+			//spawn the level prefab
 			SpawnLevelBlock();
-            //check and spawn the choosen submarine
-            SetNewSubmarine();
+			//check and spawn the choosen submarine
+			SetNewSubmarine();
 			//try to get the ads controller
 			AdsController = GameObject.Find("AdsController");
 
-            if (!PlayerPrefs.HasKey(DeathCountKey))
-            {
-                PlayerPrefs.SetInt(DeathCountKey, 0);
-            }
+			if (!PlayerPrefs.HasKey(DeathCountKey))
+			{
+				PlayerPrefs.SetInt(DeathCountKey, 0);
+			}
+			GlobalTimer.OnTimerFinished += showAdditionalpowerups;
 
-            showbannerads();
+			showbannerads();
+		}
+		
+		public void showAdditionalpowerups()
+        {
+			CanShowBOMBorCoinboxgift = true;
         }
 
         void showbannerads()
@@ -133,6 +140,9 @@ namespace PhoenixaStudio
 		{
 			//init the game state
 			State = GameState.Playing;
+			GlobalTimer.ResetTimer();
+			 GlobalTimer.SetTime(Random.Range(15, 30));
+            GlobalTimer.StartTimer(GlobalTimer.TimerType.Unscaled);
 			Player.Play();
 			//try to hide the banner ad
 			if (AdsController)

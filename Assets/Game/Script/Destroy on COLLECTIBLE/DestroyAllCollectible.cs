@@ -23,6 +23,23 @@ public class DestroyAllCollectible : MonoBehaviour
     public AudioSource pickupSound;
 
     private bool isCollected = false;
+    void Start()
+    {
+        if (GameManager.Instance.CanShowBOMBorCoinboxgift)
+        {
+
+          
+                GlobalTimer.SetTime(Random.Range(15, 30));
+                GlobalTimer.StartTimer(GlobalTimer.TimerType.Unscaled);
+            GameManager.Instance.CanShowBOMBorCoinboxgift = false;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            
+        }
+        
+    }
 
     private void Update()
     {
