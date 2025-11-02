@@ -40,7 +40,7 @@ public class DistanceProgressBar : MonoBehaviour
 
     public void SetTarget(float distance)
     {
-       
+
         if (progressSlider == null || targetText == null)
         {
             Debug.LogWarning("Progress bar setup missing references!");
@@ -62,6 +62,11 @@ public class DistanceProgressBar : MonoBehaviour
 
     private void Update()
     {
+
+        // Countdown timer if active
+      
+
+
         if (!isActive || GameManager.Instance == null)
             return;
 
@@ -100,7 +105,7 @@ public class DistanceProgressBar : MonoBehaviour
         // 🔊 Play sound
         if (bonusSound != null)
             bonusSound.Play();
-
+        GameManager.Instance.GreatJobParticle.Play();
         // 💥 Play particles
         if (bonusParticle != null)
             bonusParticle.Play();
@@ -108,9 +113,9 @@ public class DistanceProgressBar : MonoBehaviour
         // 💰 Show “+100 Coins” animation
         if (bonusText != null)
         {
-            bonusText.text = "+"+targetDistance+" Coins";
+            bonusText.text = "+" + targetDistance + " Coins";
             bonusText.gameObject.SetActive(true);
-           // bonusText.color = new Color(1, 1, 0, 0); // yellow and transparent
+            // bonusText.color = new Color(1, 1, 0, 0); // yellow and transparent
 
             // Fade in + move up animation
             //bonusText.DOFade(1, 0.3f);
@@ -119,10 +124,10 @@ public class DistanceProgressBar : MonoBehaviour
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() =>
                 {
-           
+
                     bonusText.gameObject.SetActive(false);
                     //bonusText.DOFade(0, 1f).OnComplete(() => );
-                    bonusText.rectTransform.localScale = Vector3.one*4;
+                    bonusText.rectTransform.localScale = Vector3.one * 4;
                 });
         }
 
@@ -149,4 +154,9 @@ public class DistanceProgressBar : MonoBehaviour
         progressSlider.gameObject.SetActive(state);
         isActive = state;
     }
+
+
+
+
+ 
 }

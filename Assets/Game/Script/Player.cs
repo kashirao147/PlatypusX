@@ -143,6 +143,16 @@ namespace PhoenixaStudio
 		void Update()
 		{
 
+			 if (coinCollectWindowTimer > 0)
+			{
+				coinCollectWindowTimer -= Time.unscaledDeltaTime; // use unscaled time if you want this independent of game speed
+				if (coinCollectWindowTimer <= 0)
+				{
+					// Reset when time runs out
+					coinsCollectedInWindow = 0;
+				}
+			}
+
 			if (GameManager.Instance.State != GameManager.GameState.Playing)
 				return;
 
@@ -229,7 +239,7 @@ namespace PhoenixaStudio
 				}
 				else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled)
 				{
-					 StopVerticalImmediately();
+					StopVerticalImmediately();
 					// dragActive = false;      // release -> stop setting target; gravity handles fall
 					// dragHasPendingTarget = false;
 				}
@@ -248,7 +258,7 @@ namespace PhoenixaStudio
 			}
 			else if (Input.GetMouseButtonUp(0))
 			{
-				 StopVerticalImmediately();
+				StopVerticalImmediately();
 			}
 		}
 
@@ -306,7 +316,7 @@ namespace PhoenixaStudio
 
 		public void Play()
 		{
-			DistanceProgressBar.Instance.SetTarget( GameManager.Instance.InitialTargetOfProgress);
+			DistanceProgressBar.Instance.SetTarget(GameManager.Instance.InitialTargetOfProgress);
 			DistanceProgressBar.Instance.SetActive(true);
 			timeBegin = Time.time;
 
@@ -337,8 +347,24 @@ namespace PhoenixaStudio
 			if (other.gameObject.CompareTag("Coin"))
 			{
 				other.gameObject.SendMessage("Collect");
+				GlobalValue.Coin += 1;
 
-				GlobalValue.Coin++;
+				// Start / refresh 3-second window
+				if (coinCollectWindowTimer <= 0)
+					coinCollectWindowTimer = COIN_WINDOW_DURATION;
+
+				// Count coin
+				coinsCollectedInWindow++;
+
+				// Check if reached goal within window
+				if (coinsCollectedInWindow >= COIN_TARGET)
+				{
+					GameManager.Instance.GreatJobParticle.Play();
+
+					// Reset after effect
+					coinsCollectedInWindow = 0;
+					coinCollectWindowTimer = 0;
+				}
 			}
 
 			//if the player is blinking or speed boost invincible, don't hit any obstacles
@@ -698,7 +724,7 @@ namespace PhoenixaStudio
 		{
 			if (jumpCount < 2)
 			{
-				SoundManager.PlaySfx(GameManager.Instance.SoundManager.jump);	
+				SoundManager.PlaySfx(GameManager.Instance.SoundManager.jump);
 				if (isSnowLevel)
 				{
 					if (snowParticle) snowParticle.Stop();
@@ -721,7 +747,7 @@ namespace PhoenixaStudio
 				}
 
 				isGrounded = true;
-				SoundManager.PlaySfx(GameManager.Instance.SoundManager.landed);	
+				SoundManager.PlaySfx(GameManager.Instance.SoundManager.landed);
 				jumpCount = 0;
 				if (collision.gameObject.CompareTag("Platform"))
 				{
@@ -734,7 +760,7 @@ namespace PhoenixaStudio
 		{
 			if (isSnowLevel && collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Platform"))
 			{
-				
+
 				isGrounded = false;
 			}
 		}
@@ -801,21 +827,30 @@ namespace PhoenixaStudio
 				// enable braking toward zero over a few frames
 				_releaseDampenActive = true;
 			}
-}
-
-
-		
+		}
 
 
 
-		
-	#endregion
+
+
+
+
+		#endregion
+
+		#region  CoinStreak
+
+		private int coinsCollectedInWindow = 0;
+		private float coinCollectWindowTimer = 0f;
+		private const float COIN_WINDOW_DURATION = 3f; // 3 seconds
+		private const int COIN_TARGET = 8;
+		#endregion
 
 
 
 
 
 	}
+	
 
 
 }
