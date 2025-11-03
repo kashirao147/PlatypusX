@@ -28,6 +28,7 @@ namespace PhoenixaStudio
 		public AudioClip CanonFire;
 		public AudioClip jump;
 		public AudioClip landed;
+		public AudioClip Victory;
 
 		private AudioSource musicAudio;
 		private AudioSource soundFx;

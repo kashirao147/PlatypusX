@@ -40,6 +40,8 @@ namespace PhoenixaStudio
 		//the speed of the submarine
 		
 		public float Speed { get; set; }
+		public float maxSpeed = 15f;       // Maximum speed limit
+    	public float speedIncreaseRate = 0.001f; // How fast to increase (units per second)
 		public int Score { get; set; }
 		[HideInInspector]
 		public float distance = 0;
@@ -128,6 +130,11 @@ namespace PhoenixaStudio
 			//update the distance
 			if (State == GameState.Playing)
 			{
+				 // Increase speed slowly and smoothly over time
+				// if (Speed < maxSpeed)
+				// {
+				// 	Speed += speedIncreaseRate * Time.deltaTime;
+				// }
 				distance += Speed * Time.deltaTime;
 			}
 
@@ -138,8 +145,11 @@ namespace PhoenixaStudio
 			}
 		}
 
+	
+
 		public void Play()
 		{
+			//Speed = 5;
 			//init the game state
 			State = GameState.Playing;
 			GlobalTimer.ResetTimer();
@@ -208,7 +218,7 @@ namespace PhoenixaStudio
 					else
 					{
 						Instantiate(LevelBlock[i].Levels[Random.Range(0, LevelBlock[i].Levels.Length)]);
-						if(!playerTemp.isSpeedBoosted)
+						if (!playerTemp.isSpeedBoosted) ;
 						Speed = LevelBlock[i].levelSpeed;
 					}
 

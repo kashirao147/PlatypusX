@@ -360,6 +360,7 @@ namespace PhoenixaStudio
 				if (coinsCollectedInWindow >= COIN_TARGET)
 				{
 					GameManager.Instance.CoinMasterParticle.Play();
+					SoundManager.PlaySfx(SoundManager.Instance.Victory);
 
 					// Reset after effect
 					coinsCollectedInWindow = 0;
