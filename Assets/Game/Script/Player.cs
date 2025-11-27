@@ -535,6 +535,7 @@ namespace PhoenixaStudio
 				// First time collecting speed boost
 				// Store original speed and calculate target
 				originalSpeed = GameManager.Instance.Speed;
+				GameManager.Instance.isTempSpeed=originalSpeed;
 				speedBoostTarget = originalSpeed * speedBoostMultiplier;
 				isSpeedBoosted = true;
 				isSpeedBoostInvincible = true; // Enable invincibility
@@ -558,10 +559,12 @@ namespace PhoenixaStudio
 
 		private IEnumerator SpeedBoostCoroutine()
 		{
+			Magnet.isSpeedBoost=true;
+			Magnet.gameObject.SetActive(true);
 			// Phase 1: Gradually increase speed to double over 1 second
 			float elapsedTime = 0f;
 			GameManager.Instance.Speedlines.gameObject.SetActive(true);
-
+			
 			while (elapsedTime < speedBoostRampUpTime)
 			{
 				elapsedTime += Time.deltaTime;
@@ -625,6 +628,9 @@ namespace PhoenixaStudio
 			{
 				speedBoostParticle.SetActive(false);
 			}
+			Magnet.isSpeedBoost=false;
+			Magnet.gameObject.SetActive(false);
+			
 		}
 
 		private IEnumerator SpeedBoostTimerResetCoroutine()
@@ -675,6 +681,8 @@ namespace PhoenixaStudio
 			{
 				speedBoostParticle.SetActive(false);
 			}
+			Magnet.isSpeedBoost=false;
+			Magnet.gameObject.SetActive(false);
 		}
 
 		IEnumerator DoBlinks(float time, float seconds)

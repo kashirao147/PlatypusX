@@ -76,6 +76,7 @@ namespace PhoenixaStudio
 
 		GameObject AdsController;
 		public Player playerTemp;
+		public float isTempSpeed;
 
 		void Awake()
 		{
@@ -136,7 +137,7 @@ namespace PhoenixaStudio
 		void Update()
 		{
 			//update the distance
-			if (State == GameState.Playing)
+			if (State == GameState.Playing && !playerTemp.isSpeedBoosted)
 			{
 				gameTime += Time.deltaTime;
 
@@ -165,6 +166,7 @@ namespace PhoenixaStudio
 			 State = GameState.Playing;
 			gameTime = 0f;
 			Speed = startingSpeed;
+			isTempSpeed=Speed;
 			GlobalTimer.ResetTimer();
 			 GlobalTimer.SetTime(Random.Range(15, 30));
             GlobalTimer.StartTimer(GlobalTimer.TimerType.Unscaled);

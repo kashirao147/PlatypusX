@@ -7,6 +7,7 @@ namespace PhoenixaStudio
 		//time of the magnet
 		float timer;
 		float timeCounter = 0;
+		public bool isSpeedBoost;
 		
 		public void init(float time)
 		{
@@ -20,7 +21,7 @@ namespace PhoenixaStudio
 		{
 			//calculating the time remain
 			timeCounter += Time.deltaTime;
-			if (timeCounter >= timer)
+			if (timeCounter >= timer&& !isSpeedBoost)
 				gameObject.SetActive(false);
 		}
 
