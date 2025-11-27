@@ -14,6 +14,14 @@ namespace PhoenixaStudio
 		}
 
 
+		[Header("Speed Growth Settings")]
+		public float startingSpeed = 5f;
+		//public float maxSpeed = 20f;
+		public float timeToIncreaseByOne = 30f; 
+		private float gameTime = 0f;
+
+
+
 
 		public static GameManager Instance;
 		public float InitialTargetOfProgress = 100;
@@ -130,13 +138,16 @@ namespace PhoenixaStudio
 			//update the distance
 			if (State == GameState.Playing)
 			{
-				 // Increase speed slowly and smoothly over time
-				// if (Speed < maxSpeed)
-				// {
-				// 	Speed += speedIncreaseRate * Time.deltaTime;
-				// }
+				gameTime += Time.deltaTime;
+
+				// Increase speed slowly over time
+				float speedIncrease = gameTime / timeToIncreaseByOne; // Every 30s add +1 speed
+
+				Speed = Mathf.Clamp(startingSpeed + speedIncrease, startingSpeed, maxSpeed);
+
 				distance += Speed * Time.deltaTime;
 			}
+
 
 			if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
 			{
@@ -151,7 +162,9 @@ namespace PhoenixaStudio
 		{
 			//Speed = 5;
 			//init the game state
-			State = GameState.Playing;
+			 State = GameState.Playing;
+			gameTime = 0f;
+			Speed = startingSpeed;
 			GlobalTimer.ResetTimer();
 			 GlobalTimer.SetTime(Random.Range(15, 30));
             GlobalTimer.StartTimer(GlobalTimer.TimerType.Unscaled);
@@ -218,8 +231,8 @@ namespace PhoenixaStudio
 					else
 					{
 						Instantiate(LevelBlock[i].Levels[Random.Range(0, LevelBlock[i].Levels.Length)]);
-						if (!playerTemp.isSpeedBoosted) ;
-						Speed = LevelBlock[i].levelSpeed;
+						// if (!playerTemp.isSpeedBoosted) 
+						// Speed = LevelBlock[i].levelSpeed;
 					}
 
 					break;
