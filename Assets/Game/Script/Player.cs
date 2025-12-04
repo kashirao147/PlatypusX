@@ -495,7 +495,7 @@ namespace PhoenixaStudio
 		public void UseShield()
 		{
 			//Check the shield percent
-			if (shieldEnegry < 100 || isUsingShield)
+			if (shieldEnegry < 100 || isUsingShield || GlobalValue.CollectShieldPowerUp==0)
 				return;
 			//active the shield
 			Shield.SetActive(true);
@@ -503,6 +503,7 @@ namespace PhoenixaStudio
 			timeBegin = Time.time;
 			SoundManager.PlaySfx(GameManager.Instance.SoundManager.soundPowerUpShield);
 			GlobalValue.UseShield++;
+			GlobalValue.CollectShieldPowerUp--;
 			GlobalValue.RefreashIngameMissionUI();
 		}
 

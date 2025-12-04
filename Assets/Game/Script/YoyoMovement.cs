@@ -9,11 +9,19 @@ public class YoyoMovement : MonoBehaviour
     public float duration = 1f;    // time to go from up to down
 
     private Tween yoyoTween;
+    public bool isHorizontalMovement=false;
 
     void Start()
     {
         // Start the yoyo movement
-        StartYoyo();
+        if (isHorizontalMovement)
+        {
+            StartHorizontalYoyo();
+        }
+        else
+        {
+            StartYoyo();
+        }
     }
 
     void StartYoyo()
@@ -22,6 +30,21 @@ public class YoyoMovement : MonoBehaviour
         yoyoTween = transform.DOMoveY(targetY, duration)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
+    }
+      void StartHorizontalYoyo()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        float targetX = transform.position.x + moveUp;
+
+        yoyoTween = transform.DOLocalMoveX(targetX, duration)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo)
+            .OnStepComplete(() =>
+            {
+                sr.flipX = !sr.flipX;   // Just flip visually
+            });
+
     }
 
     void OnDestroy()

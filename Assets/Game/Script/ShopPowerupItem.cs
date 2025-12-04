@@ -42,6 +42,7 @@ namespace PhoenixaStudio
 
                         case SourceType.shield:
                         return GlobalValue.CollectShieldPowerUp;
+                        
                             
 
                         case SourceType.Magnet:
@@ -68,10 +69,43 @@ namespace PhoenixaStudio
 			//check the remain coin and the limit value
 			if (GlobalValue.Coin >= price && PowerUpValue(source) < max)
 			{
+
+                  switch (source)
+                    {
+                     
+                        
+                            
+
+                        case SourceType.shield:
+                         GlobalValue.CollectShieldPowerUp+=amount;
+                         currentTxt.text =  GlobalValue.CollectShieldPowerUp + "/" + max;
+                         break;
+                            
+
+                        case SourceType.Magnet:
+                         GlobalValue.CollectMagnetPowerUp+=amount;
+                         currentTxt.text =  GlobalValue.CollectMagnetPowerUp + "/" + max;
+                         break;
+                            
+
+                        
+                            
+                        case SourceType.Speedboost:
+                         GlobalValue.CollectSpeedBoostPowerUp+=amount;
+                         currentTxt.text =  GlobalValue.CollectSpeedBoostPowerUp + "/" + max;
+                         break;
+                            
+
+                        
+                            
+                            
+                       
+                         
+                    }
 				SoundManager.PlaySfx(soundPurchased);
 				GlobalValue.Coin -= price;
-				GlobalValue.Rocket += amount;
-				currentTxt.text = GlobalValue.Rocket + "/" + max;
+				//GlobalValue.Rocket += amount;
+				
 			}
 			else
 				SoundManager.PlaySfx(soundFail);
