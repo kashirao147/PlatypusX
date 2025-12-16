@@ -44,7 +44,7 @@ public class MissileProjectile : MonoBehaviour
     {
         spawnTime = Time.time;
         // optionally set initial velocity forward
-        rb.velocity = transform.right * speed;
+        rb.linearVelocity = transform.right * speed;
         explosionEffect = GameManager.Instance.DestroyAllParticle;
     }
 
@@ -58,12 +58,12 @@ public class MissileProjectile : MonoBehaviour
             float step = turnSpeed * Time.fixedDeltaTime;
             float newZ = Mathf.MoveTowardsAngle(transform.eulerAngles.z, angle, step);
             transform.eulerAngles = new Vector3(0, 0, newZ);
-            rb.velocity = transform.right * speed;
+            rb.linearVelocity = transform.right * speed;
         }
         else
         {
             // no target: fly straight to right (uses current rotation)
-            rb.velocity = transform.right * speed;
+            rb.linearVelocity = transform.right * speed;
         }
 
         // lifetime check

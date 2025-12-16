@@ -102,10 +102,15 @@ namespace PhoenixaStudio
             // if the Product ID was configured differently between Apple and Google stores. Also note that
             // one uses the general kProductIDSubscription handle inside the game - the store-specific IDs 
             // must only be referenced here. 
-            builder.AddProduct(kProductIDSubscription, ProductType.Subscription, new IDs(){
-                { kProductNameAppleSubscription, AppleAppStore.Name },
-                { kProductNameGooglePlaySubscription, GooglePlay.Name },
-            });
+            var storeIDs = new StoreSpecificIds();
+            storeIDs.Add(kProductNameAppleSubscription, AppleAppStore.Name);
+            storeIDs.Add(kProductNameGooglePlaySubscription, GooglePlay.Name);
+
+            builder.AddProduct(
+                kProductIDSubscription,
+                ProductType.Subscription,
+                storeIDs
+            );
 
             // Kick off the remainder of the set-up with an asynchrounous call, passing the configuration 
             // and this class' instance. Expect a response either in OnInitialized or OnInitializeFailed.
@@ -231,12 +236,14 @@ namespace PhoenixaStudio
                 var apple = m_StoreExtensionProvider.GetExtension<IAppleExtensions>();
                 // Begin the asynchronous process of restoring purchases. Expect a confirmation response in 
                 // the Action<bool> below, and ProcessPurchase if there are previously purchased products to restore.
-                apple.RestoreTransactions((result) =>
+                apple.RestoreTransactions((success, message) =>
                 {
-                // The first phase of restoration. If no more responses are received on ProcessPurchase then 
-                // no purchases are available to be restored.
-                Debug.Log("RestorePurchases continuing: " + result + ". If no further messages, no purchases available to restore.");
+                    Debug.Log(
+                        "RestorePurchases result: " + success +
+                        " | Message: " + message
+                    );
                 });
+
             }
             // Otherwise ...
             else

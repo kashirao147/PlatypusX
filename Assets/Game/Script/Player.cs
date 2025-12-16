@@ -126,7 +126,7 @@ namespace PhoenixaStudio
 			}
 			//make the rig to zero gravity
 			rig.gravityScale = 0;
-			rig.velocity = Vector2.zero;
+			rig.linearVelocity = Vector2.zero;
 
 			soundEngineFX = gameObject.AddComponent<AudioSource>();
 			soundEngineFX.clip = soundEngine;
@@ -175,7 +175,7 @@ namespace PhoenixaStudio
 				HandleDragLiftInput();
 
 			transform.rotation = Quaternion.Euler(
-				0, 0, Mathf.Clamp(rig.velocity.y * rotationSpeed, -rotationMaxAngle, rotationMaxAngle)
+				0, 0, Mathf.Clamp(rig.linearVelocity.y * rotationSpeed, -rotationMaxAngle, rotationMaxAngle)
 			);
 			//Shield
 			if (!isUsingShield)
@@ -194,7 +194,7 @@ namespace PhoenixaStudio
 			if (isUseEngine)
 				soundEngineFX.volume = GlobalValue.isSound ? Mathf.Lerp(soundEngineFX.volume, volumeOn, 0.2f) : 0;
 			//play sound engine
-			if (rig.velocity.y < 0)
+			if (rig.linearVelocity.y < 0)
 			{
 				isUseEngine = false;
 				soundEngineFX.volume = GlobalValue.isSound ? Mathf.Lerp(soundEngineFX.volume, volumeOff, 0.2f) : 0;
@@ -207,14 +207,14 @@ namespace PhoenixaStudio
 			{
 				if (dragHasPendingTarget)
 				{
-					float newVy = Mathf.MoveTowards(rig.velocity.y, dragTargetVy, dragVerticalAccel * Time.fixedDeltaTime);
-					rig.velocity = new Vector2(rig.velocity.x, newVy);
+					float newVy = Mathf.MoveTowards(rig.linearVelocity.y, dragTargetVy, dragVerticalAccel * Time.fixedDeltaTime);
+					rig.linearVelocity = new Vector2(rig.linearVelocity.x, newVy);
 					dragHasPendingTarget = false;
 				}
 				else if (_releaseDampenActive)
 				{
-					float newVy = Mathf.MoveTowards(rig.velocity.y, 0f, releaseDampen * Time.fixedDeltaTime);
-					rig.velocity = new Vector2(rig.velocity.x, newVy);
+					float newVy = Mathf.MoveTowards(rig.linearVelocity.y, 0f, releaseDampen * Time.fixedDeltaTime);
+					rig.linearVelocity = new Vector2(rig.linearVelocity.x, newVy);
 					if (Mathf.Abs(newVy) < 0.01f) _releaseDampenActive = false;
 				}
 			}
@@ -334,7 +334,7 @@ namespace PhoenixaStudio
 				GetComponent<Rigidbody2D>().gravityScale = 0;
 			}
 
-			rig.velocity = Vector2.zero;
+			rig.linearVelocity = Vector2.zero;
 			GlobalValue.PlayGame++;
 		}
 
@@ -410,7 +410,7 @@ namespace PhoenixaStudio
 			soundEngineFX.Stop();
 			isDead = true;
 			rig.gravityScale = 0;
-			rig.velocity = Vector2.zero;
+			rig.linearVelocity = Vector2.zero;
 			GetComponent<BoxCollider2D>().enabled = false;
 			//disable the engine fx object
 			if (transform.Find("EngineFX"))
@@ -575,7 +575,7 @@ namespace PhoenixaStudio
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
-				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				rig.linearVelocity = new Vector2(rig.linearVelocity.x, 0); // Disable vertical movement
 
 				yield return null;
 			}
@@ -594,7 +594,7 @@ namespace PhoenixaStudio
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
-				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				rig.linearVelocity = new Vector2(rig.linearVelocity.x, 0); // Disable vertical movement
 
 				yield return null;
 			}
@@ -612,7 +612,7 @@ namespace PhoenixaStudio
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
-				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				rig.linearVelocity = new Vector2(rig.linearVelocity.x, 0); // Disable vertical movement
 
 				yield return null;
 			}
@@ -647,7 +647,7 @@ namespace PhoenixaStudio
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
-				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				rig.linearVelocity = new Vector2(rig.linearVelocity.x, 0); // Disable vertical movement
 
 				yield return null;
 			}
@@ -665,7 +665,7 @@ namespace PhoenixaStudio
 				// Keep player at the same Y position and disable control
 				Vector3 currentPos = transform.position;
 				transform.position = new Vector3(currentPos.x, speedBoostYPosition, currentPos.z);
-				rig.velocity = new Vector2(rig.velocity.x, 0); // Disable vertical movement
+				rig.linearVelocity = new Vector2(rig.linearVelocity.x, 0); // Disable vertical movement
 
 				yield return null;
 			}
@@ -739,7 +739,7 @@ namespace PhoenixaStudio
 				{
 					if (snowParticle) snowParticle.Stop();
 				}
-				rig.velocity = new Vector2(0, 0); // Reset vertical velocity
+				rig.linearVelocity = new Vector2(0, 0); // Reset vertical velocity
 				rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 				jumpCount++;
 
@@ -829,7 +829,7 @@ namespace PhoenixaStudio
 			if (instantStopOnRelease)
 			{
 				// kill vertical speed now; gravity will take over next step
-				rig.velocity = new Vector2(rig.velocity.x, 0f);
+				rig.linearVelocity = new Vector2(rig.linearVelocity.x, 0f);
 				_releaseDampenActive = false;
 			}
 			else

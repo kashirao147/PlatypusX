@@ -130,7 +130,7 @@ public class DestroyAllCollectible : MonoBehaviour
             var rb = go.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.velocity = Vector2.right * missileSpeed;
+                rb.linearVelocity = Vector2.right * missileSpeed;
             }
         }
     }

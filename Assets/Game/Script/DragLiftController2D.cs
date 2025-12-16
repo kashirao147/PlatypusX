@@ -76,15 +76,15 @@ public class DragLiftController2D : MonoBehaviour
     void FixedUpdate()
     {
         if (clampXVelocity)
-            rb.velocity = new Vector2(xVelocity, rb.velocity.y);
+            rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
 
         // Nothing special to do on release: gravity handles falling.
         // While dragging, we already adjusted velocity in ApplyDragDelta (in Update),
         // but FixedUpdate is where we actually smooth to the target:
         if (_hasPendingTarget && dragging)
         {
-            float newVy = Mathf.MoveTowards(rb.velocity.y, _targetVy, verticalAccel * Time.fixedDeltaTime);
-            rb.velocity = new Vector2(rb.velocity.x, newVy);
+            float newVy = Mathf.MoveTowards(rb.linearVelocity.y, _targetVy, verticalAccel * Time.fixedDeltaTime);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, newVy);
             _hasPendingTarget = false; // consume for this physics step
         }
     }

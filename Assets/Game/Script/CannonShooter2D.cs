@@ -63,7 +63,7 @@ namespace PhoenixaStudio
             {
                 float speed = Random.Range(projectileSpeed, projectileSpeed * 1.5f);
                 // Face right? We use the cannon’s local right as forward.
-                rb.velocity = muzzle.right * speed * -1;
+                rb.linearVelocity = muzzle.right * speed * -1;
             }
 
             // Punch / recoil
